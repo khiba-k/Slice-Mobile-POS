@@ -4,7 +4,7 @@ import { signUp } from '@/services/authService';
 import { useToastStore } from '@/store/useToastStore';
 import { validateForm } from '@/utils/SignUpScreen.utils';
 import { Link, router } from 'expo-router';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -33,7 +33,7 @@ const SignUpScreen = () => {
   const { showToast } = useToastStore();
 
   // Redirect if already authenticated
-  React.useEffect(() => {
+  useEffect(() => {
     if (user) {
       router.replace('/onboarding');
     }
@@ -62,7 +62,7 @@ const SignUpScreen = () => {
     try {
       await signUp(email.trim(), password);
       showToast(true, 'Account created successfully!');
-      router.replace('/(tabs)')
+      router.replace('/onboarding');
     } catch (error: any) {
       showToast(false, error.message);
     } finally {

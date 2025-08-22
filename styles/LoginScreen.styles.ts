@@ -95,4 +95,10 @@ export const styles = StyleSheet.create({
         color: '#FF700A',
         fontWeight: '600',
     },
+    errorText: {
+        color: 'red',
+        fontSize: 14,
+        marginTop: 10,
+        textAlign: 'center',
+    },
 });

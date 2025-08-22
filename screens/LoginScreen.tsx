@@ -1,66 +1,63 @@
 // app/auth/login/index.tsx
 import { useAuth } from '@/contexts/AuthContext';
 import { resetPassword, signIn } from '@/services/authService';
+import { useToastStore } from '@/store/useToastStore';
 import { styles } from '@/styles/LoginScreen.styles';
+import { validateForm } from '@/utils/LoginScreen.utils';
 import { Link, router } from 'expo-router';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Image,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 const logoImg = require("../assets/logo.png");
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
+  const [missingEmailError, setMissingEmailError] = useState('');
+  const [validEmailError, setValidEmailError] = useState('');
   const [password, setPassword] = useState('');
+  const [missingPasswordError, setMissingPasswordError] = useState('');
   const [loading, setLoading] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
   const { user } = useAuth();
+  const { showToast } = useToastStore();
 
   // Redirect if already authenticated
-  React.useEffect(() => {
+  useEffect(() => {
     if (user) {
-      router.replace('/(tabs)');
+      router.replace('/onboarding');
     }
   }, [user]);
 
-  const validateForm = (): boolean => {
-    if (!email.trim()) {
-      Alert.alert('Error', 'Please enter your email address');
-      return false;
-    }
-    
-    if (!password.trim()) {
-      Alert.alert('Error', 'Please enter your password');
-      return false;
-    }
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      Alert.alert('Error', 'Please enter a valid email address');
-      return false;
-    }
-    
-    return true;
-  };
+
 
   const handleSignIn = async () => {
-    if (!validateForm()) return;
+    setMissingEmailError('');
+    setValidEmailError('');
+    setMissingPasswordError('');
+    if (!validateForm(
+      email,
+      password,
+      setMissingEmailError,
+      setValidEmailError,
+      setMissingPasswordError
+    )) return;
 
     setLoading(true);
     try {
       await signIn(email.trim(), password);
-      router.replace('/(tabs)');
+      router.replace('/onboarding');
     } catch (error: any) {
-      Alert.alert('Login Failed', error.message);
+      showToast(false, error.message);
     } finally {
       setLoading(false);
     }
@@ -82,7 +79,7 @@ const LoginScreen = () => {
     try {
       await resetPassword(email.trim());
       Alert.alert(
-        'Password Reset', 
+        'Password Reset',
         'A password reset email has been sent to your email address.'
       );
     } catch (error: any) {
@@ -93,17 +90,27 @@ const LoginScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
+    <KeyboardAvoidingView
+      style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.formContainer}>
-        <Image source={logoImg} style={styles.logo} />
+          <Image source={logoImg} style={styles.logo} />
           <Text style={styles.title}>Welcome Back</Text>
           <Text style={styles.subtitle}>Sign in to your account</Text>
 
           <View style={styles.inputContainer}>
+            {missingEmailError && (
+              <Text style={styles.errorText}>
+                {missingEmailError}
+              </Text>
+            )}
+            {validEmailError && (
+              <Text style={styles.errorText}>
+                {validEmailError}
+              </Text>
+            )}
             <Text style={styles.label}>Email</Text>
             <TextInput
               style={styles.input}
@@ -118,6 +125,11 @@ const LoginScreen = () => {
           </View>
 
           <View style={styles.inputContainer}>
+            {missingPasswordError && (
+              <Text style={styles.errorText}>
+                {missingPasswordError}
+              </Text>
+            )}
             <Text style={styles.label}>Password</Text>
             <TextInput
               style={styles.input}
