@@ -2,7 +2,7 @@
 import { CheckCircle, XCircle } from "lucide-react-native"; // make sure to install lucide-react-native
 import React, { useEffect, useState } from "react";
 import { Animated, StyleSheet, Text } from "react-native";
-import { useToastStore } from "../store/useToastStore";
+import { useToastStore } from "../../store/useToastStore";
 
 export function Toast() {
   const { open, success, message, hideToast } = useToastStore();

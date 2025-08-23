@@ -1,4 +1,4 @@
-import { Toast } from "@/components/Toast";
+import { Toast } from "@/components/reusable/Toast";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
