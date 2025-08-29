@@ -1,7 +1,8 @@
+import LoadingPage from '@/components/shared/LoadingPage';
 import { useAuth } from '@/lib/contexts/AuthContext';
 import { styles } from '@/styles/LandingScreen.styles';
 import { useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 const logoImg = require("../../assets/logo.png");
@@ -20,9 +21,7 @@ const LandingScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             {loading ? (
-                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                    <ActivityIndicator size="large" />
-                </View>
+                <LoadingPage/>
             ) : (
                 <>
                     <View style={styles.textView}>
