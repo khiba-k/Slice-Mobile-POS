@@ -1,6 +1,6 @@
 // app/auth/signup/index.tsx
-import { useAuth } from '@/contexts/AuthContext';
-import { signUp } from '@/services/authService';
+import { useAuth } from '@/lib/contexts/AuthContext';
+import { signUp } from '@/lib/services/authService';
 import { useToastStore } from '@/store/useToastStore';
 import { validateForm } from '@/utils/SignUpScreen.utils';
 import { Link, router } from 'expo-router';
@@ -16,8 +16,8 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { styles } from '../styles/SignUpScreen.styles';
-const logoImg = require("../assets/logo.png");
+import { styles } from '../../styles/SignUpScreen.styles';
+const logoImg = require("../../assets/logo.png");
 
 const SignUpScreen = () => {
   const [email, setEmail] = useState('');

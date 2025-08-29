@@ -1,4 +1,5 @@
-import OnboardingScreen from "@/screens/OnboardingScreen"
+import OnboardingScreen from "@/screens/OnboardingScreen/OnboardingScreen"
+
 
 
 const Index = () => {

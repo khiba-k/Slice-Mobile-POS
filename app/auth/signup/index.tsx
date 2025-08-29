@@ -1,4 +1,4 @@
-import SignUpScreen from '@/screens/SignUpScreen'
+import SignUpScreen from '@/screens/SignUpScreen/SignUpScreen'
 import React from 'react'
 
 const index = () => {

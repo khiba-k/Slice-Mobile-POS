@@ -1,4 +1,4 @@
-import LandingScreen from '@/screens/LandingScreen';
+import LandingScreen from '@/screens/LandingScreen/LandingScreen';
 import React from 'react';
 
 const index = () => {

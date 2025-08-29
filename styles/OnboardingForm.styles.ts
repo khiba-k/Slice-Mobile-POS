@@ -8,14 +8,14 @@ export const styles = StyleSheet.create({
     },
     slideContainer: {
         flex: 1,
-        justifyContent: "center",
+        justifyContent: "flex-end",
         // alignItems: "center",
         width: "100%",
     },
     navContainer: {
         flexDirection: "row",
         justifyContent: "flex-end",
-        marginTop: 10,
+        marginTop: 5,
     },
     chevron: {
         paddingBottom: 20,

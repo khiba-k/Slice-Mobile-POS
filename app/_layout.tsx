@@ -1,9 +1,9 @@
-import { Toast } from "@/components/reusable/Toast";
+import { Toast } from "@/components/shared/Toast";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
-import { AuthProvider } from "../contexts/AuthContext";
+import { AuthProvider } from "../lib/contexts/AuthContext";
 
 export default function RootLayout() {
   const [loaded] = useFonts({

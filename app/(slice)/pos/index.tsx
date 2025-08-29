@@ -1,18 +1,27 @@
-import { logOut } from '@/services/authService'
+import { logOut } from '@/lib/services/authService'
+import { useUserStore } from '@/store/useUserStore';
 import React from 'react'
 import { Alert, Button, StyleSheet, Text, View } from 'react-native'
+import { useToastStore } from "@/store/useToastStore";
 
 const index = () => {
+    const { email, profile, clearUser } = useUserStore();
+    const { showToast } = useToastStore();
     const handleLogout = async () => {
         try {
             await logOut()
-            Alert.alert('Logged out', 'You have been logged out successfully.')
+            showToast(true, "Logged Out");
+            clearUser();
         } catch (error: any) {
-            Alert.alert('Logout Failed', error.message)
+            console.log("Logout Error: ", error);
+            showToast(false, 'Logout Failed');
         }
     }
+
     return (
         <View>
+            <Text>Welcome {profile?.firstName}!</Text>
+            <Text>Email: {email}</Text>
             <Text style={styles.text}>Home Screen</Text>
             <Button title="Logout" onPress={handleLogout} />
         </View>

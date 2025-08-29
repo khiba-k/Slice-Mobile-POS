@@ -1,4 +1,4 @@
-import LoginScreen from '@/screens/LoginScreen'
+import LoginScreen from '@/screens/LoginScreen/LoginScreen'
 import React from 'react'
 
 const index = () => {

@@ -1,24 +1,24 @@
 // app/auth/login/index.tsx
-import { useAuth } from '@/contexts/AuthContext';
-import { resetPassword, signIn } from '@/services/authService';
+import { useAuth } from '@/lib/contexts/AuthContext';
+import { resetPassword, signIn } from '@/lib/services/authService';
 import { useToastStore } from '@/store/useToastStore';
 import { styles } from '@/styles/LoginScreen.styles';
 import { validateForm } from '@/utils/LoginScreen.utils';
 import { Link, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
-  Alert,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
+    ActivityIndicator,
+    Alert,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
-const logoImg = require("../assets/logo.png");
+const logoImg = require("../../assets/logo.png");
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');

@@ -1,6 +1,6 @@
 import { Redirect, Stack } from 'expo-router';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../lib/contexts/AuthContext';
 
 export default function SliceLayout() {
     const { user, loading } = useAuth();
