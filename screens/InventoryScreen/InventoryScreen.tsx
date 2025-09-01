@@ -1,46 +1,23 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Image } from 'react-native'
-import React, { useState } from 'react'
-import { Ionicons } from '@expo/vector-icons'
+import InventorySkeleton from '@/components/shared/InventorySkeleton'
+import { InventoryItem } from '@/lib/requests/inventory.requests'
 import { styles } from '@/styles/InventoryScreen.styles'
+import { Ionicons } from '@expo/vector-icons'
+import React from 'react'
+import { FlatList, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
-const InventoryScreen = () => {
-  const [searchText, setSearchText] = useState('')
-
-  // Sample inventory data
-  const inventoryData = [
-    {
-      id: '1',
-      name: 'Coca Cola 500ml',
-      itemNumber: 'ITM-001',
-      price: 15.0,
-      stock: 20,
-      image: 'https://images.pexels.com/photos/17650224/pexels-photo-17650224.jpeg'
-    },
-    {
-      id: '2',
-      name: 'Sprite 500ml',
-      itemNumber: 'ITM-002',
-      price: 14.0,
-      stock: 35,
-      image: null
-    },
-    {
-      id: '3',
-      name: 'Fanta Orange 500ml',
-      itemNumber: 'ITM-003',
-      price: 14.0,
-      stock: 12,
-      image: 'https://images.pexels.com/photos/13950097/pexels-photo-13950097.jpeg'
-    },
-    {
-      id: '4',
-      name: 'Chips',
-      itemNumber: 'ITM-004',
-      price: 10.0,
-      stock: 50,
-      image: null
-    },
-  ]
+const InventoryScreen = ({
+  searchText,
+  setSearchText,
+  inventory,
+  isLoadingInventory,
+  handleSearch
+}: {
+  searchText: string;
+  setSearchText: (text: string) => void;
+  inventory: InventoryItem[];
+  isLoadingInventory: boolean;
+  handleSearch: () => void;
+}) => {
 
   const handleSort = () => {
     console.log('Sort pressed')
@@ -50,11 +27,11 @@ const InventoryScreen = () => {
     console.log('Filter pressed')
   }
 
-  const renderInventoryItem = ({ item }: { item: { id: string; name: string; itemNumber: string; price: number; stock: number; image: string | null } }) => (
+  const renderInventoryItem = ({ item }: { item: InventoryItem }) => (
     <View style={styles.tableRow}>
       {/* Image */}
-      {item.image ? (
-        <Image source={{ uri: item.image }} style={styles.itemImage} />
+      {item.images ? (
+        <Image source={{ uri: item.images[0] }} style={styles.itemImage} />
       ) : (
         <View style={styles.imagePlaceholder} />
       )}
@@ -67,8 +44,8 @@ const InventoryScreen = () => {
 
       {/* Price & Stock */}
       <View style={{ alignItems: "flex-end" }}>
-        <Text style={styles.price}>M {item.price}.00</Text>
-        <Text style={styles.stock}>{item.stock} Left</Text>
+        <Text style={styles.price}>M {item.sellingPrice}.00</Text>
+        <Text style={styles.stock}>{item.qtyAvailable} Left</Text>
       </View>
     </View>
   )
@@ -88,23 +65,25 @@ const InventoryScreen = () => {
           />
         </View>
 
-        <TouchableOpacity style={styles.actionButton} onPress={handleSort}>
-          <Ionicons name="swap-vertical" size={24} color="#FF700A" />
-        </TouchableOpacity>
-
         <TouchableOpacity style={styles.actionButton} onPress={handleFilter}>
           <Ionicons name="filter" size={24} color="#FF700A" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.actionButton} onPress={handleSearch}>
+          <Ionicons name="search" size={24} color="#FF700A" />
         </TouchableOpacity>
       </View>
 
       {/* Inventory List */}
-      <FlatList
-        data={inventoryData}
-        renderItem={renderInventoryItem}
-        keyExtractor={(item) => item.id}
-        style={styles.inventoryList}
-        showsVerticalScrollIndicator={false}
-      />
+      {isLoadingInventory ?
+        (<InventorySkeleton />)
+        : (<FlatList
+          data={inventory}
+          renderItem={renderInventoryItem}
+          keyExtractor={(item) => item.id}
+          style={styles.inventoryList}
+          showsVerticalScrollIndicator={false}
+        />)}
     </View>
   )
 }

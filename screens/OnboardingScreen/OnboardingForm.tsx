@@ -160,18 +160,21 @@ const OnboardingForm = () => {
                 lastName,
                 idNumber,
                 dateOfBirth,
+                email: user?.email || "",
                 primaryPhoneNum,
                 secondaryPhoneNum,
-                storeName,
-                industry,
-                location,
-                district,
-                country
+                storeData: {
+                    name: storeName,
+                    industry: storeName,
+                    location: location,
+                    district: district,
+                    country
+                }
             });
 
             if (userCreated) {
                 showToast(true, "Onboarding completed successfully!");
-                useUserStore.getState().setUser(user?.email ?? "", userCreated.data);
+                useUserStore.getState().setUserAndStore(userCreated.data.user, userCreated.data.store);
                 router.push("/(slice)/pos");
             }
 

@@ -1,20 +1,9 @@
 import { UserData } from "@/utils/OnboardingForm.utils";
 import axios from "axios";
 
-const backendUrl = "http://192.168.10.69:3000"; // Adjust the URL as needed
+const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL; // Adjust the URL as needed
 
-export interface ApiResponse<T = any> {
-    success: boolean;
-    message: string;
-    data?: T;
-}
-
-export interface UserDataResponse extends UserData {
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-}
-
+// Get User Profile (OnboardingScreen.tsx)
 export const getUser = async (userId: string) => {
     try {
         const response = await axios.get(`${backendUrl}/api/user/get/${userId}`);
@@ -25,9 +14,11 @@ export const getUser = async (userId: string) => {
     }
 }
 
+
+// Create New User and Store Profile (OnboardingForm.utils.ts)
 export const createUser = async (userData: UserData) => {
     try {
-        const response = await axios.post(`${backendUrl}/api/user/create`, userData);
+        const response = await axios.post(`${backendUrl}/api/user/create/owner`, userData);
         return response.data;
     } catch (error: any) {
         if (error.response) {

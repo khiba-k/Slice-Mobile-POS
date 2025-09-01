@@ -1,34 +1,43 @@
 import { create } from "zustand";
 
+export interface StoreProfile {
+    id: string;
+    name: string;
+    industry: string;
+    location: string;
+    district: string;
+    country: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export interface UserProfile {
     id: string;
     userId: string;
     firstName: string;
     lastName: string;
+    email: string;
     dateOfBirth: string;
     idNumber: string;
     primaryPhoneNum: string;
     secondaryPhoneNum?: string;
-    storeName: string;
-    industry: string;
-    location: string;
-    district: string;
-    country: string;
     isOwner: boolean;
+    storeId: string;
     createdAt: string;
     updatedAt: string;
 }
 
 interface UserState {
-    email: string | null;
     profile: UserProfile | null;
-    setUser: (email: string, profile: UserProfile) => void;
+    store: StoreProfile | null;
+    setUserAndStore: (user: UserProfile, store: StoreProfile) => void;
     clearUser: () => void;
 }
 
+// User Data Store (OnboardingForm.tsx, OnboardingScreen.tsx, InventoryScreen.tsx)
 export const useUserStore = create<UserState>((set) => ({
-    email: null,
     profile: null,
-    setUser: (email, profile) => set({ email, profile }),
-    clearUser: () => set({ email: null, profile: null }),
+    store: null,
+    setUserAndStore: (user, store) => set({ profile: user, store }),
+    clearUser: () => set({ profile: null, store: null }),
 }));

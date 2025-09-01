@@ -6,13 +6,16 @@ interface UserProfile {
     lastName: string;
     idNumber: string;
     dateOfBirth: string;
+    email: string;
     primaryPhoneNum: string;
     secondaryPhoneNum: string;
-    storeName: string;
-    industry: string;
-    location: string;
-    district: string;
-    country: string;
+    storeData: {
+        name: string
+        industry: string;
+        location: string;
+        district: string;
+        country: string;
+    }
 }
 
 export interface UserData extends UserProfile {

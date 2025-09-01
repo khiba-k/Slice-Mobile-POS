@@ -24,7 +24,7 @@ const OnboardingScreen = () => {
                     const userProfile = await getUser(user.uid);
                     console.log('User Profile:', userProfile);
                     if (userProfile) {
-                        useUserStore.getState().setUser(user.email ?? "", userProfile.data);
+                        useUserStore.getState().setUserAndStore(userProfile.data.user, userProfile.data.store);
                         setIsLoading(false);
                         router.push('/(slice)/pos');
                     }
