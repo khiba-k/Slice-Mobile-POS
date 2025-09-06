@@ -2,14 +2,21 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "module": "ESNext", // Set to an allowed value
+    "module": "ESNext",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     },
     "plugins": [
       {
         "name": "expo-router/tsconfig-plugin"
       }
+    ],
+    "types": [
+      "react",
+      "react-native",
+      "expo-image-picker"
     ]
   },
   "include": [

@@ -1,77 +1,103 @@
 import InventorySkeleton from '@/components/shared/InventorySkeleton'
-import { InventoryItem } from '@/lib/requests/inventory.requests'
+import { InventoryItem, ItemTypeDepartmentNamePair, PaginationMeta } from '@/lib/requests/inventory.requests'
 import { styles } from '@/styles/InventoryScreen.styles'
-import { Ionicons } from '@expo/vector-icons'
 import React from 'react'
-import { FlatList, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, View } from 'react-native'
+import FilterDisplay from './FilterDisplay'
+import InventoryFilter from './InventoryFilter'
+import InventorySearch from './InventorySearch'
+import LoadMoreButton from './LoadMoreButton'
+import RenderInventoryItem from './RenderInventoryItem'
 
 const InventoryScreen = ({
   searchText,
   setSearchText,
   inventory,
   isLoadingInventory,
-  handleSearch
+  isLoadingMore,
+  handleSearch,
+  departments,
+  itemTypes,
+  selectedDepartment,
+  setSelectedDepartment,
+  selectedItemType,
+  setSelectedItemType,
+  visible,
+  setVisible,
+  applyFilters,
+  clearSearch,
+  loadMoreItems,
+  paginationMeta,
 }: {
   searchText: string;
   setSearchText: (text: string) => void;
   inventory: InventoryItem[];
   isLoadingInventory: boolean;
+  isLoadingMore: boolean;
   handleSearch: () => void;
+  departments: ItemTypeDepartmentNamePair[];
+  itemTypes: string[];
+  selectedDepartment: string;
+  setSelectedDepartment: (dep: string) => void;
+  selectedItemType: string;
+  setSelectedItemType: (type: string) => void;
+  visible: boolean;
+  setVisible: (vis: boolean) => void;
+  applyFilters: (selectedItemType: string, selectedDepartment: string) => void;
+  clearSearch: () => void;
+  loadMoreItems: () => void;
+  paginationMeta: PaginationMeta;
 }) => {
 
-  const handleSort = () => {
-    console.log('Sort pressed')
-  }
 
-  const handleFilter = () => {
-    console.log('Filter pressed')
-  }
 
-  const renderInventoryItem = ({ item }: { item: InventoryItem }) => (
-    <View style={styles.tableRow}>
-      {/* Image */}
-      {item.images ? (
-        <Image source={{ uri: item.images[0] }} style={styles.itemImage} />
-      ) : (
-        <View style={styles.imagePlaceholder} />
-      )}
+  const renderFooter = () => (
+    <LoadMoreButton
+      onPress={loadMoreItems}
+      isLoading={isLoadingMore}
+      hasNextPage={paginationMeta.hasNextPage}
+      totalItems={paginationMeta.totalItems}
+      currentItemsCount={inventory.length}
+    />
+  );
 
-      {/* Info */}
-      <View style={{ flex: 1, flexDirection: "column", marginLeft: 10 }}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemNumber}><Text style={{ fontWeight: "400" }}>Item#</Text> {item.itemNumber}</Text>
-      </View>
-
-      {/* Price & Stock */}
-      <View style={{ alignItems: "flex-end" }}>
-        <Text style={styles.price}>M {item.sellingPrice}.00</Text>
-        <Text style={styles.stock}>{item.qtyAvailable} Left</Text>
-      </View>
-    </View>
-  )
 
   return (
     <View style={styles.container}>
       {/* Search Bar and Action Buttons */}
-      <View style={styles.searchContainer}>
-        <View style={styles.searchInputContainer}>
-          <Ionicons name="search" size={20} color="#8E8E93" style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search inventory..."
-            value={searchText}
-            onChangeText={setSearchText}
-            placeholderTextColor="#8E8E93"
+      <View>
+        <View style={styles.searchContainer}>
+          <InventorySearch
+            searchText={searchText}
+            setSearchText={setSearchText}
+            handleSearch={handleSearch}
+            clearSearch={clearSearch}
+          />
+          {/* Inventory Filter Button */}
+          <InventoryFilter
+            departments={departments}
+            itemTypes={itemTypes}
+            selectedDepartment={selectedDepartment}
+            setSelectedDepartment={setSelectedDepartment}
+            selectedItemType={selectedItemType}
+            setSelectedItemType={setSelectedItemType}
+            visible={visible}
+            setVisible={setVisible}
+            applyFilters={applyFilters}
           />
         </View>
-
-        <TouchableOpacity style={styles.actionButton} onPress={handleFilter}>
-          <Ionicons name="filter" size={24} color="#FF700A" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.actionButton} onPress={handleSearch}>
-          <Ionicons name="search" size={24} color="#FF700A" />
-        </TouchableOpacity>
+        {/* Filter Display */}
+        <FilterDisplay
+          selectedItemType={selectedItemType}
+          setSelectedItemType={setSelectedItemType}
+          selectedDepartment={selectedDepartment}
+          setSelectedDepartment={setSelectedDepartment}
+          handleApplyFilters={(type, dep) => {
+            setSelectedItemType(type);
+            setSelectedDepartment(dep);
+            applyFilters(type, dep);
+          }}
+        />
       </View>
 
       {/* Inventory List */}
@@ -79,10 +105,12 @@ const InventoryScreen = ({
         (<InventorySkeleton />)
         : (<FlatList
           data={inventory}
-          renderItem={renderInventoryItem}
+          renderItem={RenderInventoryItem}
           keyExtractor={(item) => item.id}
           style={styles.inventoryList}
           showsVerticalScrollIndicator={false}
+          ListFooterComponent={renderFooter}
+          ListFooterComponentStyle={styles.footerContainer}
         />)}
     </View>
   )

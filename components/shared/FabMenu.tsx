@@ -1,10 +1,12 @@
-import { StyleSheet, Text, View, TouchableOpacity, Animated } from 'react-native'
-import React, { useRef, useState } from 'react'
 import { Ionicons } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
+import React, { useRef, useState } from 'react'
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 const FabMenu = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const animation = useRef(new Animated.Value(0)).current
+    const animation = useRef(new Animated.Value(0)).current;
+    const router = useRouter();
 
     const toggleMenu = () => {
         const toValue = isOpen ? 0 : 1
@@ -44,6 +46,7 @@ const FabMenu = () => {
         opacity: animation,
     }
 
+
     return (
         <View style={styles.container}>
 
@@ -61,7 +64,7 @@ const FabMenu = () => {
             {/* Add Inventory Button */}
             <Animated.View style={[styles.secondaryButton, addInventoryStyle]}>
                 <TouchableOpacity
-                    onPress={() => console.log("Add Inventory")}
+                    onPress={() => router.push("/(slice)/pos/addInventory")}
                     style={styles.bubble}
                 >
 

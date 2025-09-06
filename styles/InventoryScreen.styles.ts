@@ -30,6 +30,11 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         color: '#000000',
     },
+    clearSearchBtn: {
+        // borderLeftWidth: 1,
+        // borderLeftColor: '#C7C7CC',
+        paddingLeft: 8,
+    },
     actionButton: {
         width: 44,
         height: 44,
@@ -71,7 +76,7 @@ export const styles = StyleSheet.create({
         color: '#A16B45',
     },
     price: {
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: '500',
         color: '#000',
     },
@@ -79,5 +84,43 @@ export const styles = StyleSheet.create({
         fontSize: 13,
         color: '#6C757D',
         fontWeight: '400',
+    },
+    loadMoreContainer: {
+        borderWidth: 1,
+        borderColor: 'red',
+        paddingVertical: 20,
+        paddingHorizontal: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    loadMoreButton: {
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        marginVertical: 16,
+        marginHorizontal: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    loadMoreButtonDisabled: {
+    },
+    loadingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    loadMoreText: {
+        color: '#FFFFFF',
+        fontWeight: '600',
+        fontSize: 16,
+        marginLeft: 8,
+    },
+    allLoadedText: {
+        color: '#666666',
+        fontSize: 14,
+        fontStyle: 'italic',
+    },
+    footerContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 })

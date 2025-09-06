@@ -6,10 +6,25 @@ interface FetchInventoryProps {
     storeId: string;
     search?: string;
     itemType?: string;
-    departmentType?: string;
+    departmentName?: string;
     page?: number;
 }
 
+// (inventory.tsx, InventoryScreen.tsx, inventory.utils.ts, InventoryFilter.tsx)
+export interface ItemTypeDepartmentNamePair {
+    itemType: string,
+    departmentName: string;
+}
+
+export interface PaginationMeta {
+    page: number;
+    take: number;
+    totalItems: number;
+    totalPages: number;
+    hasNextPage: boolean;
+}
+
+// (inventory.tsx, InventoryScreen.tsx, RenderInventoryItem.tsx)
 export interface InventoryItem {
     id: string;
     itemNumber: string;
@@ -29,17 +44,24 @@ export interface InventoryItem {
     images: string[];
 }
 
+export interface InventoryFilters {
+    id: string;
+    itemType: string;
+    departmentName: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 // Get Store Inventory (InventoryScreen.tsx)
 export const getInventory = async (params: FetchInventoryProps) => {
     try {
-        console.log("Params: ", params)
-        const { storeId, search, itemType, departmentType, page } = params;
+        const { storeId, search, itemType, departmentName, page } = params;
 
         // Build query params
         const query = new URLSearchParams();
         if (search) query.append("search", search);
         if (itemType) query.append("itemType", itemType);
-        if (departmentType) query.append("departmentName", departmentType); // matches API
+        if (departmentName) query.append("departmentName", departmentName); // matches API
         if (page) query.append("page", page.toString());
 
         let url = `${backendUrl}/api/inventory/get/${storeId}`;
@@ -49,9 +71,23 @@ export const getInventory = async (params: FetchInventoryProps) => {
         }
 
         const response = await axios.get(url);
-        return response.data;
+        console.log("Inventory Response:", response.data);
+        return response.data.data;
     } catch (error) {
         console.error("Error fetching inventory:", error);
         throw error;
     }
 };
+
+// Get Inventory Filters (inventory.tsx)
+export const getInventoryFilters = async (storeId: string) => {
+    try {
+        const url = `${backendUrl}/api/inventory/filters/${storeId}`;
+        const response = await axios.get(url);
+        return response.data.data;
+    }
+    catch (error) {
+        console.log("Error Fetching Inventory Filters: ", error)
+        throw error;
+    }
+}
