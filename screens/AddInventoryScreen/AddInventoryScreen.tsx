@@ -1,6 +1,7 @@
+import { ItemTypeDepartmentNamePair } from '@/lib/requests/inventory.requests';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
@@ -9,7 +10,23 @@ import ImagesTab from './ImagesTab';
 import PricingTab from './PricingTab';
 // import { getItemTypeDepartments, getUnitTypes } from '@/lib/services/inventory.services';
 
-const AddInventoryScreen = () => {
+const AddInventoryScreen = (
+  {
+    departments,
+    itemTypes,
+    selectedDepartment,
+    setSelectedDepartment,
+    selectedItemType,
+    setSelectedItemType,
+  }: {
+    departments: ItemTypeDepartmentNamePair[];
+    itemTypes: string[];
+    selectedDepartment: string;
+    setSelectedDepartment: (dep: string) => void;
+    selectedItemType: string;
+    setSelectedItemType: (type: string) => void;
+  }
+) => {
   const router = useRouter();
   const { control, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     defaultValues: {
@@ -19,7 +36,7 @@ const AddInventoryScreen = () => {
       description: '',
       unitSize: '',
       unitType: '',
-      qtyAvailable: '',
+      qtyAvailable: 0,
       lowStockAlertQty: '',
       sellingPrice: '',
       costPrice: '',
@@ -33,24 +50,7 @@ const AddInventoryScreen = () => {
   const [lowStockEnabled, setLowStockEnabled] = useState(false);
 
   // State for dropdown data
-  const [itemTypeDepartments, setItemTypeDepartments] = useState<{ itemType: string; departmentName: string }[]>([]);
   const [unitTypes, setUnitTypes] = useState<{ name: string }[]>([]);
-
-  // Fetch data when screen mounts
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // const types = await getItemTypeDepartments(); // fetch from ItemTypeDepartment table
-        // setItemTypeDepartments(types || []);
-
-        // const units = await getUnitTypes(); // fetch store-specific unitTypes
-        // setUnitTypes(units || []);
-      } catch (err) {
-        console.error('Error fetching inventory data:', err);
-      }
-    };
-    fetchData();
-  }, []);
 
   // Tab state
   const [index, setIndex] = useState(0);
@@ -66,8 +66,12 @@ const AddInventoryScreen = () => {
       <DetailsTab
         control={control}
         errors={errors}
-        itemTypeDepartments={itemTypeDepartments}
-        unitTypes={unitTypes}
+        departments={departments}
+        selectedDepartment={selectedDepartment}
+        setSelectedDepartment={setSelectedDepartment}
+        selectedItemType={selectedItemType}
+        setSelectedItemType={setSelectedItemType}
+        itemTypes={itemTypes}
         lowStockEnabled={lowStockEnabled}
         setLowStockEnabled={setLowStockEnabled}
         watch={watch}

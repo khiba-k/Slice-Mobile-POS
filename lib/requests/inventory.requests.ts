@@ -10,7 +10,9 @@ interface FetchInventoryProps {
     page?: number;
 }
 
-// (inventory.tsx, InventoryScreen.tsx, inventory.utils.ts, InventoryFilter.tsx)
+// (inventory.tsx, InventoryScreen.tsx, inventory.utils.ts, 
+// InventoryFilter.tsx, AddInventoryScreen/index.tsx
+// AddInventoryScreen.tsx, DetailsTab.tsx)
 export interface ItemTypeDepartmentNamePair {
     itemType: string,
     departmentName: string;
@@ -79,7 +81,7 @@ export const getInventory = async (params: FetchInventoryProps) => {
     }
 };
 
-// Get Inventory Filters (inventory.tsx)
+// Get Inventory Filters (AddInventoryScreen.utils.ts, inventory.utils.ts)
 export const getInventoryFilters = async (storeId: string) => {
     try {
         const url = `${backendUrl}/api/inventory/filters/${storeId}`;

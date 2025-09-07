@@ -1,5 +1,6 @@
 import { create } from "zustand";
 
+// Store Profile Type (inventory.utils.ts, AddInventoryScreen.utils.ts)
 export interface StoreProfile {
     id: string;
     name: string;
