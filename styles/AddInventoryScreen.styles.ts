@@ -40,5 +40,11 @@ export const styles = StyleSheet.create({
   },
   fieldView: {
     marginBottom: 16
-  }
+  },
+  imagePreviewSmall: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+    marginRight: 8,
+  },
 });

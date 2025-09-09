@@ -14,17 +14,9 @@ const AddInventoryScreen = (
   {
     departments,
     itemTypes,
-    selectedDepartment,
-    setSelectedDepartment,
-    selectedItemType,
-    setSelectedItemType,
   }: {
     departments: ItemTypeDepartmentNamePair[];
     itemTypes: string[];
-    selectedDepartment: string;
-    setSelectedDepartment: (dep: string) => void;
-    selectedItemType: string;
-    setSelectedItemType: (type: string) => void;
   }
 ) => {
   const router = useRouter();
@@ -49,8 +41,6 @@ const AddInventoryScreen = (
   // State for low stock toggle
   const [lowStockEnabled, setLowStockEnabled] = useState(false);
 
-  // State for dropdown data
-  const [unitTypes, setUnitTypes] = useState<{ name: string }[]>([]);
 
   // Tab state
   const [index, setIndex] = useState(0);
@@ -67,10 +57,6 @@ const AddInventoryScreen = (
         control={control}
         errors={errors}
         departments={departments}
-        selectedDepartment={selectedDepartment}
-        setSelectedDepartment={setSelectedDepartment}
-        selectedItemType={selectedItemType}
-        setSelectedItemType={setSelectedItemType}
         itemTypes={itemTypes}
         lowStockEnabled={lowStockEnabled}
         setLowStockEnabled={setLowStockEnabled}
@@ -78,7 +64,11 @@ const AddInventoryScreen = (
         setValue={setValue}
       />
     ),
-    pricing: () => <PricingTab control={control} />,
+    pricing: () => (
+      <PricingTab
+        errors={errors}
+        control={control}
+      />),
     images: () => <ImagesTab control={control} />,
   });
 
@@ -105,7 +95,7 @@ const AddInventoryScreen = (
             }}
             style={{
               padding: 8,
-              marginLeft: -8, // Align with screen edge
+              marginLeft: -8,
             }}
           >
             <Ionicons name="chevron-back" size={24} color="black" />

@@ -10,8 +10,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 const index = () => {
   const [departments, setDepartments] = useState<ItemTypeDepartmentNamePair[]>([]);
   const [itemTypes, setItemTypes] = useState<string[]>([]);
-  const [selectedDepartment, setSelectedDepartment] = useState<string>('');
-  const [selectedItemType, setSelectedItemType] = useState<string>('');
+  
+  
+
   const { store } = useUserStore();
 
   useFocusEffect(
@@ -23,6 +24,7 @@ const index = () => {
           setItemTypes: setItemTypes
         }
       )
+      setItemTypes([])
     }, [])
   );
 
@@ -31,10 +33,6 @@ const index = () => {
       <AddInventoryScreen
         departments={departments}
         itemTypes={itemTypes}
-        selectedDepartment={selectedDepartment}
-        setSelectedDepartment={setSelectedDepartment}
-        selectedItemType={selectedItemType}
-        setSelectedItemType={setSelectedItemType}
       />
     </SafeAreaView>
   )

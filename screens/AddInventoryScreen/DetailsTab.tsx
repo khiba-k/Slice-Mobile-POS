@@ -11,10 +11,6 @@ const DetailsTab = (
         errors,
         itemTypes,
         departments,
-        setSelectedDepartment,
-        selectedItemType,
-        setSelectedItemType,
-        selectedDepartment,
         lowStockEnabled,
         setLowStockEnabled,
         watch,
@@ -28,12 +24,10 @@ const DetailsTab = (
         setValue: any;
         itemTypes: string[];
         departments: ItemTypeDepartmentNamePair[],
-        selectedDepartment: string;
-        setSelectedDepartment: (dep: string) => void;
-        selectedItemType: string;
-        setSelectedItemType: (type: string) => void;
     }
 ) => {
+    const [selectedDepartment, setSelectedDepartment] = useState<string>('');
+    const [selectedItemType, setSelectedItemType] = useState<string>('');
     const [isAddingItemType, setIsAddingItemType] = useState(false);
     const [isAddingDepartment, setIsAddingDepartment] = useState(false);
     const [isAddingUnitType, setIsAddingUnitType] = useState(false);
@@ -49,6 +43,7 @@ const DetailsTab = (
         <ScrollView style={styles.tabContainer}>
             {/* Item Type  */}
             <View style={styles.fieldView}>
+                {errors.itemType && <Text style={styles.error}>{errors.itemType.message}</Text>}
                 <Text style={styles.label}>Item Type <Text style={styles.required}>*</Text></Text>
                 {isAddingItemType ? (
                     <View style={styles.row2}>
@@ -92,6 +87,7 @@ const DetailsTab = (
 
             {/* Department */}
             <View style={styles.fieldView}>
+                {errors.departmentName && <Text style={styles.error}>{errors.departmentName.message}</Text>}
                 <Text style={styles.label}>Department <Text style={styles.required}>*</Text></Text>
                 {(isAddingDepartment || isAddingItemType) ? (
                     <View style={styles.row2}>
@@ -240,7 +236,7 @@ const DetailsTab = (
             </View>
             {lowStockEnabled && (
                 <View style={styles.fieldView}>
-                    <Text style={styles.label}>Low Stock Quantity</Text>
+                    <Text style={styles.label}>Alert Quantity</Text>
                     <Controller
                         control={control}
                         name="lowStockAlertQty"
