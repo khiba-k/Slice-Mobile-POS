@@ -1,7 +1,9 @@
 import { ItemTypeDepartmentNamePair } from '@/lib/requests/inventory.requests';
+import { useUserStore } from '@/store/useUserStore';
 import { styles } from '@/styles/AddInventoryScreen.styles';
+import { getItemTypesDepartmentPairs } from '@/utils/AddInventoryScreen.utils';
 import { Picker } from '@react-native-picker/picker';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { ScrollView, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
@@ -9,8 +11,6 @@ const DetailsTab = (
     {
         control,
         errors,
-        itemTypes,
-        departments,
         lowStockEnabled,
         setLowStockEnabled,
         watch,
@@ -22,8 +22,6 @@ const DetailsTab = (
         setLowStockEnabled: (val: boolean) => void;
         watch: any;
         setValue: any;
-        itemTypes: string[];
-        departments: ItemTypeDepartmentNamePair[],
     }
 ) => {
     const [selectedDepartment, setSelectedDepartment] = useState<string>('');
@@ -31,7 +29,21 @@ const DetailsTab = (
     const [isAddingItemType, setIsAddingItemType] = useState(false);
     const [isAddingDepartment, setIsAddingDepartment] = useState(false);
     const [isAddingUnitType, setIsAddingUnitType] = useState(false);
+    const [departments, setDepartments] = useState<ItemTypeDepartmentNamePair[]>([]);
+    const [itemTypes, setItemTypes] = useState<string[]>([]);
+    const { store } = useUserStore()
     const defaultUnitTypes = ["mg", "g", "kg", "mℓ", "ℓ", "cm", "mm", "hr", "packet", "box"];
+
+
+    useEffect(() => {
+        getItemTypesDepartmentPairs(
+            {
+                store: store,
+                setDepartments: setDepartments,
+                setItemTypes: setItemTypes
+            }
+        )
+    }, [])
 
     const SmallButton = ({ label, onPress }: { label: string; onPress: () => void }) => (
         <TouchableOpacity onPress={onPress} style={styles.smallButton}>

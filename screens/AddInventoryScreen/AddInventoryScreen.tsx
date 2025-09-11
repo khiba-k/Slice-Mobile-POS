@@ -1,4 +1,3 @@
-import { ItemTypeDepartmentNamePair } from '@/lib/requests/inventory.requests';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -11,13 +10,7 @@ import PricingTab from './PricingTab';
 // import { getItemTypeDepartments, getUnitTypes } from '@/lib/services/inventory.services';
 
 const AddInventoryScreen = (
-  {
-    departments,
-    itemTypes,
-  }: {
-    departments: ItemTypeDepartmentNamePair[];
-    itemTypes: string[];
-  }
+
 ) => {
   const router = useRouter();
   const { control, handleSubmit, watch, setValue, formState: { errors } } = useForm({
@@ -56,8 +49,6 @@ const AddInventoryScreen = (
       <DetailsTab
         control={control}
         errors={errors}
-        departments={departments}
-        itemTypes={itemTypes}
         lowStockEnabled={lowStockEnabled}
         setLowStockEnabled={setLowStockEnabled}
         watch={watch}

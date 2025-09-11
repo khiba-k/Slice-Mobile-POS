@@ -1,11 +1,22 @@
 import { styles } from '@/styles/AddInventoryScreen.styles';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import React from 'react';
+import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  Modal,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-const ImagesTab = ({ control }: { control: any }) => {
+type Props = { control: any };
+
+const ImagesTab: React.FC<Props> = ({ control }) => {
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
   // Helper to pick a single image
   const pickImage = async (onChange: (uri: string) => void) => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -26,7 +37,10 @@ const ImagesTab = ({ control }: { control: any }) => {
   };
 
   // Helper to pick multiple images
-  const pickMultipleImages = async (value: string[], onChange: (newArray: string[]) => void) => {
+  const pickMultipleImages = async (
+    value: string[],
+    onChange: (newArray: string[]) => void
+  ) => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       alert('Permission to access media library is required!');
@@ -41,50 +55,124 @@ const ImagesTab = ({ control }: { control: any }) => {
 
     if (!result.canceled && result.assets.length > 0) {
       const newUris = result.assets.map((asset: { uri: string }) => asset.uri);
-      onChange([...value, ...newUris]);
+      onChange([...(value || []), ...newUris]);
     }
   };
 
   return (
     <ScrollView style={styles.tabContainer}>
-      {/* Display Image */}
-      <Text style={styles.label}>Display Image</Text>
+      {/* Thumbnail Image */}
+      <Text style={styles.label}>Thumbnail Image</Text>
       <Controller
         control={control}
         name="displayImage"
         render={({ field: { onChange, value } }) => (
-          <TouchableOpacity style={styles.imagePicker} onPress={() => pickImage(onChange)}>
-            {value ? (
-              <Image source={{ uri: value }} style={styles.imagePreview} />
-            ) : (
-              <Ionicons name="image" size={48} color="#888" />
-            )}
-          </TouchableOpacity>
+          <View style={styles.thumbnailWrapper}>
+            <TouchableOpacity
+              style={styles.imagePicker}
+              onPress={() => pickImage(onChange)}
+              activeOpacity={0.9}
+            >
+              {value ? (
+                <Image
+                  source={{ uri: value }}
+                  style={styles.imagePreview}
+                  resizeMode="contain"
+                />
+              ) : (
+                <Ionicons name="image" size={48} color="#888" />
+              )}
+
+              {value && (
+                <>
+                  {/* Expand button inside image area */}
+                  <TouchableOpacity
+                    style={styles.expandButtonInside}
+                    onPress={() => setPreviewImage(value)}
+                  >
+                    <Ionicons name="expand" size={18} color="#fff" />
+                  </TouchableOpacity>
+
+                  {/* Remove button inside image area */}
+                  <TouchableOpacity
+                    style={styles.removeButtonInside}
+                    onPress={() => onChange(null)}
+                  >
+                    <Ionicons name="close" size={18} color="#fff" />
+                  </TouchableOpacity>
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
         )}
       />
 
-      {/* Other Images */}
-      <Text style={styles.label}>Other Images</Text>
+      {/* Additional Images */}
+      <Text style={styles.label}>Additional Images</Text>
       <Controller
         control={control}
         name="otherImages"
         defaultValue={[]}
         render={({ field: { onChange, value } }) => (
           <View>
-            <TouchableOpacity style={styles.imagePicker} onPress={() => pickMultipleImages(value, onChange)}>
-              <Ionicons name="images" size={48} color="#888" />
+            <TouchableOpacity
+              style={styles.imagePickerSmall}
+              onPress={() => pickMultipleImages(value || [], onChange)}
+            >
+              <Ionicons name="images" size={36} color="#888" />
               <Text>Add Images</Text>
             </TouchableOpacity>
 
             {/* Show previews */}
-            <ScrollView horizontal>
-              {value.map((uri: string, index: number) => (
-                <Image key={index} source={{ uri }} style={styles.imagePreviewSmall} />
-              ))}
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {Array.isArray(value) &&
+                value.map((uri: string, index: number) => (
+                  <View key={index} style={styles.imagePreviewWrapper}>
+                    <TouchableOpacity onPress={() => setPreviewImage(uri)}>
+                      <Image
+                        source={{ uri }}
+                        style={styles.imagePreviewSmall}
+                        resizeMode="cover"
+                      />
+                    </TouchableOpacity>
+
+                    {/* Remove button */}
+                    <TouchableOpacity
+                      style={styles.removeButton}
+                      onPress={() =>
+                        onChange(
+                          value.filter((_: string, i: number) => i !== index)
+                        )
+                      }
+                    >
+                      <Ionicons name="close" size={14} color="#fff" />
+                    </TouchableOpacity>
+                  </View>
+                ))}
             </ScrollView>
           </View>
         )}
       />
+
+      {/* Fullscreen Preview Modal */}
+      <Modal visible={!!previewImage} transparent animationType="fade">
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            style={styles.modalClose}
+            onPress={() => setPreviewImage(null)}
+          >
+            <Ionicons name="close" size={32} color="#fff" />
+          </TouchableOpacity>
+
+          {previewImage && (
+            <Image
+              source={{ uri: previewImage }}
+              style={styles.fullscreenImage}
+              resizeMode="contain"
+            />
+          )}
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
