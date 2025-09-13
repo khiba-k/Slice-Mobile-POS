@@ -17,8 +17,8 @@ type Props = { control: any };
 const ImagesTab: React.FC<Props> = ({ control }) => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  // Helper to pick a single image
-  const pickImage = async (onChange: (uri: string) => void) => {
+  // Pick a single image (for display/thumbnail)
+  const pickImage = async (onChange: (uri: string | null) => void) => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       alert('Permission to access media library is required!');
@@ -36,7 +36,7 @@ const ImagesTab: React.FC<Props> = ({ control }) => {
     }
   };
 
-  // Helper to pick multiple images
+  // Pick multiple images (for otherImages)
   const pickMultipleImages = async (
     value: string[],
     onChange: (newArray: string[]) => void
@@ -61,7 +61,11 @@ const ImagesTab: React.FC<Props> = ({ control }) => {
 
   return (
     <ScrollView style={styles.tabContainer}>
-      {/* Thumbnail Image */}
+      <View style={styles.header}>
+        <Text style={{ color: '#FF700A', fontSize: 16 }}>Images</Text>
+      </View>
+
+      {/* Thumbnail / Display Image */}
       <Text style={styles.label}>Thumbnail Image</Text>
       <Controller
         control={control}
@@ -85,7 +89,7 @@ const ImagesTab: React.FC<Props> = ({ control }) => {
 
               {value && (
                 <>
-                  {/* Expand button inside image area */}
+                  {/* Expand button */}
                   <TouchableOpacity
                     style={styles.expandButtonInside}
                     onPress={() => setPreviewImage(value)}
@@ -93,7 +97,7 @@ const ImagesTab: React.FC<Props> = ({ control }) => {
                     <Ionicons name="expand" size={18} color="#fff" />
                   </TouchableOpacity>
 
-                  {/* Remove button inside image area */}
+                  {/* Remove button */}
                   <TouchableOpacity
                     style={styles.removeButtonInside}
                     onPress={() => onChange(null)}
@@ -123,7 +127,7 @@ const ImagesTab: React.FC<Props> = ({ control }) => {
               <Text>Add Images</Text>
             </TouchableOpacity>
 
-            {/* Show previews */}
+            {/* Previews */}
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               {Array.isArray(value) &&
                 value.map((uri: string, index: number) => (
@@ -140,9 +144,7 @@ const ImagesTab: React.FC<Props> = ({ control }) => {
                     <TouchableOpacity
                       style={styles.removeButton}
                       onPress={() =>
-                        onChange(
-                          value.filter((_: string, i: number) => i !== index)
-                        )
+                        onChange(value.filter((_: string, i: number) => i !== index))
                       }
                     >
                       <Ionicons name="close" size={14} color="#fff" />

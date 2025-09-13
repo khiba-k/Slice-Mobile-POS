@@ -4,11 +4,16 @@ import React from 'react'
 import { Image, Text, View } from 'react-native'
 
 const RenderInventoryItem = ({ item }: { item: InventoryItem }) => {
+    const displayImage = item.images?.find(img => img.isDisplayImage === true);
     return (
         <View style={styles.tableRow}>
             {/* Image */}
-            {item.images ? (
-                <Image source={{ uri: item.images[0] }} style={styles.itemImage} />
+            {displayImage ? (
+                <Image
+                    source={{ uri: displayImage.url}}
+                    style={styles.itemImage}
+                    onError={() => console.log('Display image failed to load')}
+                />
             ) : (
                 <View style={styles.imagePlaceholder} />
             )}

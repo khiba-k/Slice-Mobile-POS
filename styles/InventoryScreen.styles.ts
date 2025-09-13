@@ -64,6 +64,8 @@ export const styles = StyleSheet.create({
     imagePlaceholder: {
         width: 50,
         height: 50,
+        backgroundColor: '#F2F2F7',
+        borderRadius: 8,
     },
     itemName: {
         fontSize: 16,

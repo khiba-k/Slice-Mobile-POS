@@ -70,6 +70,7 @@ export const fetchInventory = async ({
     }
 
     const data: InventoryItem[] = response.items || [];
+    console.log('Fetched inventory items:', data);
     const meta = response.meta || {
       page: 1,
       take: 14,

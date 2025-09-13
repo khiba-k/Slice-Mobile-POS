@@ -1,19 +1,29 @@
+import LoadingPage from '@/components/shared/LoadingPage';
+import { useToastStore } from '@/store/useToastStore';
+import { useUserStore } from '@/store/useUserStore';
+import { addInventory, addItemSchema } from '@/utils/AddInventoryScreen.utils';
 import { Ionicons } from '@expo/vector-icons';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
+import { Check, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import DetailsTab from './DetailsTab';
 import ImagesTab from './ImagesTab';
 import PricingTab from './PricingTab';
-// import { getItemTypeDepartments, getUnitTypes } from '@/lib/services/inventory.services';
 
-const AddInventoryScreen = (
-
-) => {
+const AddInventoryScreen = () => {
   const router = useRouter();
-  const { control, handleSubmit, watch, setValue, formState: { errors } } = useForm({
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(addItemSchema),
     defaultValues: {
       itemType: '',
       departmentName: '',
@@ -28,123 +38,150 @@ const AddInventoryScreen = (
       markupPercentage: '',
       displayImage: null,
       otherImages: [],
-    }
+    },
   });
 
   // State for low stock toggle
   const [lowStockEnabled, setLowStockEnabled] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState<string>('');
+  const [selectedItemType, setSelectedItemType] = useState<string>('');
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [sellingPrice, setSellingPrice] = useState<string>('');
+  const [costPrice, setCostPrice] = useState<string>('');
+  const [markupPercentage, setMarkupPercentage] = useState<string>('');
+  const { store } = useUserStore();
+  const { showToast } = useToastStore();
 
+  const [loading, setLoading] = useState(false);
 
-  // Tab state
-  const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    { key: 'details', title: 'Details' },
-    { key: 'pricing', title: 'Pricing' },
-    { key: 'images', title: 'Images' },
-  ]);
+  // Wizard step state
+  const [step, setStep] = useState(0);
 
-  // Scenes for TabView
-  const renderScene = SceneMap({
-    details: () => (
-      <DetailsTab
-        control={control}
-        errors={errors}
-        lowStockEnabled={lowStockEnabled}
-        setLowStockEnabled={setLowStockEnabled}
-        watch={watch}
-        setValue={setValue}
-      />
-    ),
-    pricing: () => (
-      <PricingTab
-        errors={errors}
-        control={control}
-      />),
-    images: () => <ImagesTab control={control} />,
-  });
+  const onSubmit = async (data: any) => {
+    setLoading(true);
+    addInventory(data, store, router, showToast);
+    setLoading(false);
+  };
 
-  const onSubmit = (data: any) => {
-    console.log('Form submitted:', data);
-    // call your API to create item here
+  const onError = (errors: any) => {
+    console.log('Validation errors:', errors);
+    
+    showToast(false, 'Missing Required Fields');
+  };
+
+  // Navigation handlers
+  const goNext = () => {
+    if (step < 2) setStep(step + 1);
+  };
+
+  const goBack = () => {
+    if (step > 0) setStep(step - 1);
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FFFFFF', }}>
-      <View style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-        backgroundColor: '#FFFFFF',
-        marginTop: 20
-      }}>
-        <View style={{ width: '10%' }}>
-          {/* Back Button */}
-          <TouchableOpacity
-            onPress={() => {
-              router.back()
-            }}
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+      {loading ? (
+        <LoadingPage />
+      ) : (
+        <>
+          {/* Header */}
+          <View
             style={{
-              padding: 8,
-              marginLeft: -8,
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingHorizontal: 16,
+              paddingVertical: 12,
+              backgroundColor: '#FFFFFF',
+              marginTop: 20,
             }}
           >
-            <Ionicons name="chevron-back" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
+            <View style={{ width: '10%' }}>
+              <TouchableOpacity
+                onPress={() => router.back()}
+                style={{ padding: 8, marginLeft: -8 }}
+              >
+                <Ionicons name="chevron-back" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
 
+            <View style={{ width: '80%', alignItems: 'center' }}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: '600',
+                  color: '#000',
+                  marginLeft: 8,
+                }}
+              >
+                Add Inventory
+              </Text>
+            </View>
+          </View>
 
-        <View style={{ width: '80%', alignItems: 'center' }}>
-          {/* Title */}
-          <Text style={{
-            fontSize: 18,
-            fontWeight: '600',
-            color: '#000',
-            marginLeft: 8,
-          }}>
-            Add Inventory
-          </Text>
+          {/* Slide container: render all slides but hide inactive */}
+          <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, display: step === 0 ? 'flex' : 'none' }}>
+              <DetailsTab
+                control={control}
+                errors={errors}
+                lowStockEnabled={lowStockEnabled}
+                setLowStockEnabled={setLowStockEnabled}
+                watch={watch}
+                setValue={setValue}
+                selectedItemType={selectedItemType}
+                setSelectedItemType={setSelectedItemType}
+                selectedDepartment={selectedDepartment}
+                setSelectedDepartment={setSelectedDepartment}
+              />
+            </View>
 
-        </View>
+            <View style={{ flex: 1, display: step === 1 ? 'flex' : 'none' }}>
+              <PricingTab
+                control={control}
+                errors={errors}
+                sellingPrice={sellingPrice}
+                watch={watch}
+                costPrice={costPrice}
+                markupPercentage={markupPercentage}
+                setSellingPrice={setSellingPrice}
+                setCostPrice={setCostPrice}
+                setMarkupPercentage={setMarkupPercentage}
+              />
+            </View>
 
-      </View>
-      {/* Form Tab */}
-      <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={{ width: 400 }}
-        renderTabBar={props => (
-          <TabBar
-            {...props}
-            indicatorStyle={{
-              backgroundColor: 'transparent',
-              height: 3,
-              borderRadius: 2,
-              alignItems: 'center',
-              marginLeft: 40,
-            }}
+            <View style={{ flex: 1, display: step === 2 ? 'flex' : 'none' }}>
+              <ImagesTab control={control} />
+            </View>
+          </View>
+
+          {/* Navigation chevrons */}
+          <View
             style={{
-              backgroundColor: '#F2F2F7',
-              elevation: 1,
-              shadowOpacity: 0,
-              marginHorizontal: 20,
+              flexDirection: 'row',
+              justifyContent: step === 0 ? 'flex-end' : 'space-between',
               alignItems: 'center',
-              borderRadius: 12,
-              height: 44,
-              marginTop: 15,
+              paddingHorizontal: 20,
+              paddingVertical: 12,
             }}
-            activeColor="#FF700A"
-            inactiveColor="#8E8E93"
-            tabStyle={{
-              width: 'auto',
-              minWidth: 80,
-              marginHorizontal: 10,
-            }}
-            pressColor="rgba(255, 112, 10, 0.1)"
-          />
-        )}
-      />
+          >
+            {step > 0 && (
+              <TouchableOpacity onPress={goBack}>
+                <ChevronLeft size={40} color="#333" />
+              </TouchableOpacity>
+            )}
+
+            {step < 2 ? (
+              <TouchableOpacity onPress={goNext}>
+                <ChevronRight size={40} color="#FF700A" />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={handleSubmit(onSubmit, onError)}>
+                <Check size={40} color="#FF700A" />
+              </TouchableOpacity>
+            )}
+          </View>
+        </>
+      )}
     </View>
   );
 };

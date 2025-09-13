@@ -43,8 +43,15 @@ export interface InventoryItem {
     storeId: string;
     createdAt: string;
     updatedAt: string;
-    images: string[];
+    images: ItemImage[];
 }
+
+interface ItemImage {
+    id: string;
+    url: string;
+    itemId: string;
+    isDisplayImage: boolean;
+  }
 
 export interface InventoryFilters {
     id: string;
@@ -52,6 +59,20 @@ export interface InventoryFilters {
     departmentName: string;
     createdAt: string;
     updatedAt: string;
+}
+
+export interface AddInventoryType {
+    itemType: string,
+    departmentName: string,
+    name: string,
+    description?: string,
+    unitSize?: string,
+    unitType?: string,
+    qtyAvailable?: number,
+    lowStockAlertQty?: number,
+    sellingPrice: number,
+    costPrice?: number,
+    markupPercentage?: number,
 }
 
 // Get Store Inventory (InventoryScreen.tsx)
@@ -73,7 +94,6 @@ export const getInventory = async (params: FetchInventoryProps) => {
         }
 
         const response = await axios.get(url);
-        console.log("Inventory Response:", response.data);
         return response.data.data;
     } catch (error) {
         console.error("Error fetching inventory:", error);
@@ -93,3 +113,20 @@ export const getInventoryFilters = async (storeId: string) => {
         throw error;
     }
 }
+
+// Add Inventory (AddInventoryScreen.utils.ts)
+export const addInventoryItem = async (
+    itemData: AddInventoryType & { images: { url: string | null; isDisplayImage: boolean }[] },
+    storeId: string
+) => {
+    try {
+
+        const url = `${backendUrl}/api/inventory/add/${storeId}`;
+        const response = await axios.post(url, itemData);
+
+        return response.data;
+    } catch (error) {
+        console.error("Error adding inventory item:", error);
+        throw error;
+    }
+};

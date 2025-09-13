@@ -20,9 +20,7 @@ const OnboardingScreen = () => {
             try {
                 setIsLoading(true);
                 if (user) {
-                    console.log('Authenticated User:', user);
                     const userProfile = await getUser(user.uid);
-                    console.log('User Profile:', userProfile);
                     if (userProfile) {
                         useUserStore.getState().setUserAndStore(userProfile.data.user, userProfile.data.store);
                         setIsLoading(false);

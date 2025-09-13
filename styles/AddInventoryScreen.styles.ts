@@ -124,4 +124,10 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 6,
   },
+  header: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  }
 });

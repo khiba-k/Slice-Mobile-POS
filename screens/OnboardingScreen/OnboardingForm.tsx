@@ -1,16 +1,16 @@
 // OnboardingForm.tsx
-import { Check, ChevronLeft, ChevronRight } from "lucide-react-native";
-import React, { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import LoadingPage from "@/components/shared/LoadingPage";
 import { useAuth } from "@/lib/contexts/AuthContext";
 import { useToastStore } from "@/store/useToastStore";
+import { useUserStore } from "@/store/useUserStore";
 import { styles } from "@/styles/OnboardingForm.styles";
 import { createStoreOwner, validateForm } from "@/utils/OnboardingForm.utils";
 import { useRouter } from "expo-router";
+import { Check, ChevronLeft, ChevronRight } from "lucide-react-native";
+import React, { useState } from "react";
+import { TouchableOpacity, View } from "react-native";
 import SlideOne from "./SlideOne";
 import SlideTwo from "./SlideTwo";
-import LoadingPage from "@/components/shared/LoadingPage";
-import { useUserStore } from "@/store/useUserStore";
 
 const OnboardingForm = () => {
     const [step, setStep] = useState(0);
@@ -178,7 +178,6 @@ const OnboardingForm = () => {
                 router.push("/(slice)/pos");
             }
 
-            console.log("User created successfully:", userCreated);
         } catch (error: any) {
             showToast(false, error?.message || "Error creating user");
         } finally {
