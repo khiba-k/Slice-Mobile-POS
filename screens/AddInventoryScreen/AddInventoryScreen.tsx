@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Text, TouchableOpacity, View } from 'react-native';
 import DetailsTab from './DetailsTab';
+import DiscardModal from './DiscardModal';
 import ImagesTab from './ImagesTab';
 import PricingTab from './PricingTab';
 
@@ -51,6 +52,7 @@ const AddInventoryScreen = () => {
   const [markupPercentage, setMarkupPercentage] = useState<string>('');
   const { store } = useUserStore();
   const { showToast } = useToastStore();
+  const [showDiscardModal, setShowDiscardModal] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
@@ -59,13 +61,14 @@ const AddInventoryScreen = () => {
 
   const onSubmit = async (data: any) => {
     setLoading(true);
+    console.log("Submitting Inventory");
     addInventory(data, store, router, showToast);
     setLoading(false);
   };
 
   const onError = (errors: any) => {
     console.log('Validation errors:', errors);
-    
+
     showToast(false, 'Missing Required Fields');
   };
 
@@ -97,11 +100,15 @@ const AddInventoryScreen = () => {
           >
             <View style={{ width: '10%' }}>
               <TouchableOpacity
-                onPress={() => router.back()}
+                onPress={() => setShowDiscardModal(true)}
                 style={{ padding: 8, marginLeft: -8 }}
               >
                 <Ionicons name="chevron-back" size={24} color="black" />
               </TouchableOpacity>
+              <DiscardModal
+                showConfirm={showDiscardModal}
+                setShowConfirm={setShowDiscardModal}
+              />
             </View>
 
             <View style={{ width: '80%', alignItems: 'center' }}>

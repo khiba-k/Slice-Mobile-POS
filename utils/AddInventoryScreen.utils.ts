@@ -1,5 +1,6 @@
 import { addInventoryItem, getInventoryFilters, InventoryFilters } from '@/lib/requests/inventory.requests';
 import { StoreProfile } from '@/store/useUserStore';
+import * as ImagePicker from 'expo-image-picker';
 import { z } from 'zod';
 import { uploadImageToSupabase } from './supabase.storage';
 
@@ -177,3 +178,45 @@ export const addInventory = async (
 
   }
 }
+
+// Pick a single image for display/thumbnail (ImagesTab.tsx)
+export const pickImage = async (onChange: (uri: string | null) => void) => {
+  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  if (status !== 'granted') {
+    alert('Permission to access media library is required!');
+    return;
+  }
+
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsEditing: true,
+    quality: 0.7,
+  });
+
+  if (!result.canceled && result.assets.length > 0) {
+    onChange(result.assets[0].uri);
+  }
+};
+
+// Pick multiple images for additional images (ImagesTab.tsx)
+export const pickMultipleImages = async (
+  value: string[],
+  onChange: (newArray: string[]) => void
+) => {
+  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  if (status !== 'granted') {
+    alert('Permission to access media library is required!');
+    return;
+  }
+
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsEditing: true,
+    quality: 0.7,
+  });
+
+  if (!result.canceled && result.assets.length > 0) {
+    const newUris = result.assets.map((asset: { uri: string }) => asset.uri);
+    onChange([...(value || []), ...newUris]);
+  }
+};
