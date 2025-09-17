@@ -1,8 +1,9 @@
 import InventorySkeleton from '@/components/shared/InventorySkeleton'
 import { InventoryItem, ItemTypeDepartmentNamePair, PaginationMeta } from '@/lib/requests/inventory.requests'
 import { styles } from '@/styles/InventoryScreen.styles'
-import React from 'react'
+import React, { useState } from 'react'
 import { FlatList, View } from 'react-native'
+import AddToSale from './AddToSale'
 import FilterDisplay from './FilterDisplay'
 import InventoryFilter from './InventoryFilter'
 import InventorySearch from './InventorySearch'
@@ -48,7 +49,7 @@ const InventoryScreen = ({
   loadMoreItems: () => void;
   paginationMeta: PaginationMeta;
 }) => {
-
+  const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
 
 
   const renderFooter = () => (
@@ -105,13 +106,24 @@ const InventoryScreen = ({
         (<InventorySkeleton />)
         : (<FlatList
           data={inventory}
-          renderItem={RenderInventoryItem}
           keyExtractor={(item) => item.id}
           style={styles.inventoryList}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={renderFooter}
           ListFooterComponentStyle={styles.footerContainer}
+          renderItem={({ item }) => (
+            <RenderInventoryItem
+              item={item}
+              onLongPress={() => setSelectedItem(item)} // pass your handler here
+            />
+          )}
         />)}
+      <AddToSale
+        showAddToSale={!!selectedItem}
+        setShowAddToSale={(val) => { if (!val) setSelectedItem(null) }}
+        onAddNewSale={() => console.log("Add new sale for", selectedItem?.name)}
+        onAddDraftSale={() => console.log("Add draft sale for", selectedItem?.name)}
+      />
     </View>
   )
 }
