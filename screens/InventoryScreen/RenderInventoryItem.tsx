@@ -11,9 +11,9 @@ const RenderInventoryItem = ({ item, onLongPress }:
         <View>
             <TouchableOpacity
                 onLongPress={() => (
-                    onLongPress
-                )} // 👈 long press action
-                style={styles.tableRow} // keep your row style on the touchable
+                    onLongPress()
+                )}
+                style={styles.tableRow}
                 activeOpacity={0.8}
             >
                 {/* Image */}
