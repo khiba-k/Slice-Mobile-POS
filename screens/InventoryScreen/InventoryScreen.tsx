@@ -1,6 +1,8 @@
 import InventorySkeleton from '@/components/shared/InventorySkeleton'
 import { InventoryItem, ItemTypeDepartmentNamePair, PaginationMeta } from '@/lib/requests/inventory.requests'
+import { useEditItemStore } from '@/store/useEditItemStore'
 import { styles } from '@/styles/InventoryScreen.styles'
+import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { FlatList, View } from 'react-native'
 import AddToSale from './AddToSale'
@@ -50,7 +52,8 @@ const InventoryScreen = ({
   paginationMeta: PaginationMeta;
 }) => {
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
-
+  const { setClickedItem } = useEditItemStore();
+  const router = useRouter();
 
   const renderFooter = () => (
     <LoadMoreButton
@@ -114,7 +117,11 @@ const InventoryScreen = ({
           renderItem={({ item }) => (
             <RenderInventoryItem
               item={item}
-              onLongPress={() => setSelectedItem(item)} // pass your handler here
+              onLongPress={() => setSelectedItem(item)}
+              onPress={() => {
+                setClickedItem(item);
+                router.push("/(slice)/pos/editInventory");
+              }}
             />
           )}
         />)}

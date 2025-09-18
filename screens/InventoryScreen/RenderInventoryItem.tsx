@@ -3,8 +3,11 @@ import { styles } from '@/styles/InventoryScreen.styles'
 import React from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 
-const RenderInventoryItem = ({ item, onLongPress }:
-    { item: InventoryItem, onLongPress: () => void; }) => {
+const RenderInventoryItem = ({ item, onLongPress, onPress }:
+    {
+        item: InventoryItem, onLongPress: () => void;
+        onPress: () => void;
+    }) => {
     const displayImage = item.images?.find(img => img.isDisplayImage === true);
 
     return (
@@ -13,8 +16,9 @@ const RenderInventoryItem = ({ item, onLongPress }:
                 onLongPress={() => (
                     onLongPress()
                 )}
+                onPress={() => onPress()}
                 style={styles.tableRow}
-                activeOpacity={0.8}
+                activeOpacity={0.4}
             >
                 {/* Image */}
                 {displayImage ? (

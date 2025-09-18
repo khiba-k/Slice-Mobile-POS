@@ -1,0 +1,76 @@
+import React from 'react';
+import { Modal, Text, TouchableOpacity, View } from 'react-native';
+
+const SaveModal = ({
+    showSave,
+    setShowSave,
+    onSubmit
+}: {
+    showSave: boolean;
+    setShowSave: (confirm: boolean) => void;
+    onSubmit: () => void;
+}) => {
+    return (
+        <View>
+            <Modal
+                visible={showSave}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setShowSave(false)}
+            >
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: "rgba(0,0,0,0.5)",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: 20,
+                    }}
+                >
+                    <View
+                        style={{
+                            backgroundColor: "#fff",
+                            borderRadius: 12,
+                            padding: 20,
+                            width: "90%",
+                        }}
+                    >
+                        <Text style={{ fontSize: 18, fontWeight: "600", marginBottom: 12 }}>
+                            Discard changes?
+                        </Text>
+                        <Text style={{ color: "#555", marginBottom: 20 }}>
+                            Are you sure you want to save the edits to this item ?
+                        </Text>
+
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "flex-end",
+                                gap: 12,
+                            }}
+                        >
+                            <TouchableOpacity onPress={() => {
+                                setShowSave(false)
+                            }}>
+                                <Text style={{ color: "#8E8E93", fontWeight: "600" }}>
+                                    Cancel
+                                </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setShowSave(false);
+                                    onSubmit();
+                                }}
+                            >
+                                <Text style={{ color: "green", fontWeight: "600" }}>Save</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+        </View>
+    )
+}
+
+export default SaveModal

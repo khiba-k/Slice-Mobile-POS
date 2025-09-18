@@ -39,6 +39,7 @@ export interface InventoryItem {
     qtyAvailable: number;
     lowStockAlertQty: number;
     sellingPrice: number;
+    costPrice: number;
     markupPercentage: number;
     storeId: string;
     createdAt: string;
@@ -51,7 +52,7 @@ interface ItemImage {
     url: string;
     itemId: string;
     isDisplayImage: boolean;
-  }
+}
 
 export interface InventoryFilters {
     id: string;
@@ -127,6 +128,27 @@ export const addInventoryItem = async (
         return response.data;
     } catch (error) {
         console.error("Error adding inventory item:", error);
+        throw error;
+    }
+};
+
+// Add Inventory (EditInventoryScreen.utils.ts)
+export const updateInventoryItem = async (
+    itemData: AddInventoryType & {
+        images?: { id?: string; url: string; isDisplayImage?: boolean }[];
+        removeImages?: string[]; // <-- NEW
+    },
+    inventoryId: string
+) => {
+    try {
+        const url = `${backendUrl}/api/inventory/update/${inventoryId}`;
+
+        // Use PATCH instead of POST (since you're updating)
+        const response = await axios.patch(url, itemData);
+
+        return response.data;
+    } catch (error) {
+        console.error("Error updating inventory item:", error);
         throw error;
     }
 };
