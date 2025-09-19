@@ -1,3 +1,4 @@
+import { InventoryItem } from "@/lib/requests/inventory.requests";
 import React from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -6,11 +7,13 @@ const AddToSale = ({
     setShowAddToSale,
     onAddNewSale,
     onAddDraftSale,
+    item,
 }: {
     showAddToSale: boolean;
     setShowAddToSale: (value: boolean) => void;
     onAddNewSale?: () => void;
     onAddDraftSale?: () => void;
+    item: InventoryItem | null;
 }) => {
     return (
         <View>
@@ -30,26 +33,26 @@ const AddToSale = ({
                             <Text style={styles.closeText}>✕</Text>
                         </TouchableOpacity>
 
-                        <Text style={styles.title}>Add to Sale</Text>
+                        <Text style={styles.title}>Add <Text style={{fontSize: 14, color: "red"}}>#{item?.itemNumber}</Text> to Sale</Text>
 
                         <TouchableOpacity
-                            style={[styles.actionButton, { backgroundColor: "#FF700A" }]}
+                            style={[styles.actionButton, { backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#FF700A" }]}
                             onPress={() => {
                                 setShowAddToSale(false);
                                 onAddNewSale?.();
                             }}
                         >
-                            <Text style={styles.actionText}>New Sale</Text>
+                            <Text style={[styles.actionText, { color: "#FF700A" }]}>New Sale</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            style={[styles.actionButton, { backgroundColor: "#eee" }]}
+                            style={[styles.actionButton, { backgroundColor: "white", borderWidth: 1, borderColor: "purple" }]}
                             onPress={() => {
                                 setShowAddToSale(false);
                                 onAddDraftSale?.();
                             }}
                         >
-                            <Text style={[styles.actionText, { color: "#555" }]}>Draft Sale</Text>
+                            <Text style={[styles.actionText, { color: "purple" }]}>Draft Sale</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -72,7 +75,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: 12,
         padding: 20,
-        width: "90%",
+        width: "80%",
         alignItems: "center",
         position: "relative",
     },

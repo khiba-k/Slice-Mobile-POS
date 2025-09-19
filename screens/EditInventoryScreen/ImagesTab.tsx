@@ -7,7 +7,7 @@ import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import PreviewModal from './PreviewModal';
 
 export type FormImage = {
-  id?: string; 
+  id?: string;
   uri: string;
   isDisplayImage: boolean;
   new?: boolean;
@@ -19,7 +19,7 @@ type Props = { control: any };
 const ImagesTab: React.FC<Props> = ({ control }) => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  // --- Helper: Pick single image ---
+  // --- Pick single image ---
   const pickImageUri = async (): Promise<string | null> => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') return null;
@@ -36,7 +36,7 @@ const ImagesTab: React.FC<Props> = ({ control }) => {
     return null;
   };
 
-  // --- Helper: Pick multiple images ---
+  // --- Pick multiple images ---
   const pickMultipleImageUris = async (): Promise<string[] | null> => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') return null;
@@ -53,12 +53,25 @@ const ImagesTab: React.FC<Props> = ({ control }) => {
     return null;
   };
 
-  // --- Helper: wrap URI into FormImage ---
   const wrapAsFormImage = (uri: string, isDisplayImage: boolean): FormImage => ({
     uri,
     isDisplayImage,
     new: true,
   });
+
+  // Fixed removeImage function with better matching logic
+  const removeImage = (images: FormImage[], imgToRemove: FormImage): FormImage[] => {
+    return images.map((img) => {
+      // Create a unique key for comparison - prefer id, fallback to uri
+      const imgKey = img.id || img.uri;
+      const removeKey = imgToRemove.id || imgToRemove.uri;
+
+      if (imgKey === removeKey) {
+        return { ...img, removed: true };
+      }
+      return img;
+    });
+  };
 
   return (
     <ScrollView style={styles.tabContainer}>
@@ -66,13 +79,14 @@ const ImagesTab: React.FC<Props> = ({ control }) => {
         <Text style={{ color: '#FF700A', fontSize: 16 }}>Images</Text>
       </View>
 
-      {/* Thumbnail / Display Image */}
+      {/* Thumbnail Image */}
       <Text style={styles.label}>Thumbnail Image</Text>
       <Controller
         control={control}
         name="displayImage"
         render={({ field: { onChange, value } }) => {
           const image = value as FormImage | null;
+          const showImage = image && !image.removed;
 
           return (
             <View style={styles.thumbnailWrapper}>
@@ -84,9 +98,9 @@ const ImagesTab: React.FC<Props> = ({ control }) => {
                   if (uri) onChange(wrapAsFormImage(uri, true));
                 }}
               >
-                {image ? (
+                {showImage ? (
                   <Image
-                    source={{ uri: image.uri }}
+                    source={{ uri: image!.uri }}
                     style={styles.imagePreview}
                     resizeMode="contain"
                   />
@@ -94,9 +108,8 @@ const ImagesTab: React.FC<Props> = ({ control }) => {
                   <Ionicons name="image" size={48} color="#888" />
                 )}
 
-                {image && (
+                {image && !image.removed && (
                   <>
-                    {/* Expand button */}
                     <TouchableOpacity
                       style={styles.expandButtonInside}
                       onPress={() => setPreviewImage(image.uri)}
@@ -104,12 +117,9 @@ const ImagesTab: React.FC<Props> = ({ control }) => {
                       <Ionicons name="expand" size={18} color="#fff" />
                     </TouchableOpacity>
 
-                    {/* Remove button */}
                     <TouchableOpacity
                       style={styles.removeButtonInside}
-                      onPress={() =>
-                        onChange({ ...image, removed: true })
-                      }
+                      onPress={() => onChange({ ...image, removed: true })}
                     >
                       <Ionicons name="close" size={18} color="#fff" />
                     </TouchableOpacity>
@@ -129,7 +139,7 @@ const ImagesTab: React.FC<Props> = ({ control }) => {
         defaultValue={[]}
         render={({ field: { onChange, value } }) => {
           const images = value as FormImage[];
-          const maxReached = images.length >= 4;
+          const maxReached = images.filter(img => !img.removed).length >= 4;
 
           return (
             <View>
@@ -150,31 +160,29 @@ const ImagesTab: React.FC<Props> = ({ control }) => {
               </TouchableOpacity>
 
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {images.map((img, index) => (
-                  <View key={index} style={styles.imagePreviewWrapper}>
-                    <TouchableOpacity onPress={() => setPreviewImage(img.uri)}>
-                      <Image
-                        source={{ uri: img.uri }}
-                        style={styles.imagePreviewSmall}
-                        resizeMode="cover"
-                      />
-                    </TouchableOpacity>
+                {images
+                  .filter(img => !img.removed)
+                  .map((img) => (
+                    <View key={img.id ?? img.uri} style={styles.imagePreviewWrapper}>
+                      <TouchableOpacity onPress={() => setPreviewImage(img.uri)}>
+                        <Image
+                          source={{ uri: img.uri }}
+                          style={styles.imagePreviewSmall}
+                          resizeMode="cover"
+                        />
+                      </TouchableOpacity>
 
-                    {/* Remove button */}
-                    <TouchableOpacity
-                      style={styles.removeButton}
-                      onPress={() =>
-                        onChange(
-                          images.map((i, idx) =>
-                            idx === index ? { ...i, removed: true } : i
-                          )
-                        )
-                      }
-                    >
-                      <Ionicons name="close" size={14} color="#fff" />
-                    </TouchableOpacity>
-                  </View>
-                ))}
+                      <TouchableOpacity
+                        style={styles.removeButton}
+                        onPress={() => {
+                          const updatedImages = removeImage(images, img);
+                          onChange(updatedImages);
+                        }}
+                      >
+                        <Ionicons name="close" size={14} color="#fff" />
+                      </TouchableOpacity>
+                    </View>
+                  ))}
               </ScrollView>
             </View>
           );

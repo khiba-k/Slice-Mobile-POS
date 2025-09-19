@@ -127,6 +127,7 @@ const InventoryScreen = ({
         />)}
       <AddToSale
         showAddToSale={!!selectedItem}
+        item={selectedItem}
         setShowAddToSale={(val) => { if (!val) setSelectedItem(null) }}
         onAddNewSale={() => console.log("Add new sale for", selectedItem?.name)}
         onAddDraftSale={() => console.log("Add draft sale for", selectedItem?.name)}

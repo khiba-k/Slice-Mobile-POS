@@ -61,8 +61,7 @@ const AddInventoryScreen = () => {
 
   const onSubmit = async (data: any) => {
     setLoading(true);
-    console.log("Submitting Inventory");
-    addInventory(data, store, router, showToast);
+    await addInventory(data, store, router, showToast);
     setLoading(false);
   };
 

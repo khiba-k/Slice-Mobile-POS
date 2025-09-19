@@ -73,7 +73,7 @@ const EditInventoryScreen = () => {
 
     const onSubmit = async (data: any) => {
         setLoading(true);
-        editInventory(data, clickedItem!.id, router, showToast);
+        await editInventory(data, clickedItem!.id, router, showToast);
         setLoading(false);
     };
 
@@ -134,7 +134,7 @@ const EditInventoryScreen = () => {
                                     marginLeft: 8,
                                 }}
                             >
-                                Edit Inventory
+                                Edit Inventory <Text style={{color: "#FF700A"}}>#{clickedItem?.itemNumber}</Text>
                             </Text>
                         </View>
                     </View>

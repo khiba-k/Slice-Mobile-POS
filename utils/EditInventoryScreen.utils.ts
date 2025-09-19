@@ -10,7 +10,7 @@ export type OutgoingImage = {
     isDisplayImage: boolean;
 };
 
-// Add Inventory Form Validation Schema(AddInventoryScreen.tsx)
+// Add Inventory Form Validation Schema(EditInventoryScreen.tsx)
 export const addItemSchema = z.object({
     itemType: z.string().nonempty('Item Type is required'),
     departmentName: z.string().nonempty('Department is required'),
@@ -45,6 +45,7 @@ export const addItemSchema = z.object({
             uri: z.string(),
             isDisplayImage: z.boolean(),
             new: z.boolean().optional(),
+            removed: z.boolean().optional(), // ✅ Added this
         })
         .nullable()
         .optional(),
@@ -56,6 +57,7 @@ export const addItemSchema = z.object({
                 uri: z.string(),
                 isDisplayImage: z.boolean(),
                 new: z.boolean().optional(),
+                removed: z.boolean().optional(), // ✅ Added this
             })
         )
         .optional(),
@@ -170,6 +172,7 @@ export const editInventory = async (
     showToast: (success: boolean, message: string) => void
 ) => {
     try {
+
         const { displayImage, otherImages, ...itemDataWithoutImages } = data;
 
         const allImages: FormImage[] = [
