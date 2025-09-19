@@ -220,16 +220,26 @@ const DetailsTab: React.FC<DetailsTabProps> = ({
                         <Controller
                             control={control}
                             name="unitType"
-                            render={({ field: { onChange, value } }) => (
-                                <View style={styles.pickerCard}>
-                                    <Picker style={{ flex: 1 }} selectedValue={value} onValueChange={onChange}>
-                                        <Picker.Item label="Select Unit Type (e.g. mg, ℓ, packet)" value="" />
-                                        {defaultUnitTypes.map(u => (
-                                            <Picker.Item key={u} label={u} value={u} />
-                                        ))}
-                                    </Picker>
-                                </View>
-                            )}
+                            render={({ field: { onChange, value } }) => {
+                                const unitTypes = value && !defaultUnitTypes.includes(value)
+                                    ? [value, ...defaultUnitTypes]
+                                    : defaultUnitTypes;
+
+                                return (
+                                    <View style={styles.pickerCard}>
+                                        <Picker
+                                            style={{ flex: 1 }}
+                                            selectedValue={value}
+                                            onValueChange={onChange}
+                                        >
+                                            <Picker.Item label="Select Unit Type (e.g. mg, ℓ, packet)" value="" />
+                                            {unitTypes.map(u => (
+                                                <Picker.Item key={u} label={u} value={u} />
+                                            ))}
+                                        </Picker>
+                                    </View>
+                                );
+                            }}
                         />
                         <SmallButton label="+" onPress={() => setIsAddingUnitType(true)} disabled={false} />
                     </View>
