@@ -30,6 +30,11 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         color: '#000000',
     },
+    clearSearchBtn: {
+        // borderLeftWidth: 1,
+        // borderLeftColor: '#C7C7CC',
+        paddingLeft: 8,
+    },
     actionButton: {
         width: 44,
         height: 44,
@@ -38,57 +43,86 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    tableHeader: {
-        flexDirection: 'row',
-        backgroundColor: '#F8F9FA',
-        paddingVertical: 12,
-        paddingHorizontal: 16,
-        borderRadius: 8,
-        marginBottom: 8,
-    },
-    headerText: {
-        flex: 1,
-        fontSize: 14,
-        fontWeight: '600',
-        color: '#6C757D',
-        textAlign: 'center',
-    },
-    salesList: {
+    inventoryList: {
         flex: 1,
     },
     tableRow: {
         flexDirection: 'row',
         backgroundColor: '#FFFFFF',
-        paddingVertical: 16,
+        paddingVertical: 14,
         paddingHorizontal: 6,
         borderBottomWidth: 0.5,
         borderBottomColor: '#E5E5EA',
         alignItems: "center",
-        justifyContent: "space-between",
     },
-    orderNumber: {
-        flex: 1,
+    itemImage: {
+        width: 50,
+        height: 50,
+        borderRadius: 8,
+        backgroundColor: '#F2F2F7',
+    },
+    imagePlaceholder: {
+        width: 50,
+        height: 50,
+        backgroundColor: '#F2F2F7',
+        borderRadius: 8,
+    },
+    itemName: {
+        fontSize: 16,
+        color: '#1C120D',
+        fontWeight: '500',
+    },
+    itemNumber: {
         fontSize: 14,
         fontWeight: '300',
         color: '#A16B45',
     },
     price: {
-        flex: 1,
-        fontSize: 14,
-        fontWeight: '400',
-        color: 'black',
-        textAlign: 'right',
-    },
-    customerName: {
-        flex: 1,
-        fontSize: 16,
-        color: '#1C120D',
+        fontSize: 12,
         fontWeight: '500',
+        color: '#000',
     },
-    date: {
-        flex: 1,
-        fontSize: 14,
+    stock: {
+        fontSize: 13,
         color: '#6C757D',
-        textAlign: 'center',
+        fontWeight: '400',
+    },
+    loadMoreContainer: {
+        borderWidth: 1,
+        borderColor: 'red',
+        paddingVertical: 20,
+        paddingHorizontal: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    loadMoreButton: {
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        marginVertical: 16,
+        marginHorizontal: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    loadMoreButtonDisabled: {
+    },
+    loadingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    loadMoreText: {
+        color: '#FFFFFF',
+        fontWeight: '600',
+        fontSize: 16,
+        marginLeft: 8,
+    },
+    allLoadedText: {
+        color: '#666666',
+        fontSize: 14,
+        fontStyle: 'italic',
+    },
+    footerContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 })

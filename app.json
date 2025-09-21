@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Slice-Mobile-POS",
-    "slug": "Slice-Mobile-POS",
+    "slug": "slice-mobile-pos",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.khiba.slicemobilepos"
     },
     "android": {
       "adaptiveIcon": {
@@ -17,7 +18,14 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.SliceMobilePOS"
+      "package": "com.khiba.slicemobilepos",
+      "versionCode": 1,
+      "permissions": [
+        "INTERNET",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -38,6 +46,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "05368e3e-8373-462a-a233-398468dadddf"
+      }
     }
   }
 }
