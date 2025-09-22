@@ -31,13 +31,14 @@ const RenderSales = ({ sale, onLongPress, onPress }:
                 )} */}
                 {/* Info */}
                 <View style={{ flex: 1, flexDirection: "column", marginLeft: 10, marginRight: 20 }}>
-                    <Text style={styles.itemName}>{sale.name ?? ""}</Text>
+                    <Text style={styles.itemName}>{sale.name ?? " - "}</Text>
                     <Text style={styles.itemNumber}><Text style={{ fontWeight: "400" }}>Sale#</Text> {sale.saleNumber}</Text>
                 </View>
 
                 {/* Price & Stock */}
                 <View style={{ alignItems: "flex-end" }}>
-                    <Text style={styles.price}>M {sale.total}
+                    <Text style={styles.price}>
+                        M {Number(sale.total).toFixed(2)}
                     </Text>
                 </View>
             </TouchableOpacity>

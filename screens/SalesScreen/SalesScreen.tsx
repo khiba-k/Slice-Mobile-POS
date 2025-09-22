@@ -3,7 +3,7 @@ import { PaginationMeta, Sale } from '@/lib/requests/sales.requests'
 import { styles } from '@/styles/SalesScreen.styles'
 import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
-import { FlatList, View } from 'react-native'
+import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 import LoadMoreButton from './LoadMoreButton'
 import RenderSales from './RenderSales'
 import SalesSearch from './SalesSearch'
@@ -13,14 +13,16 @@ const SalesScreen = ({
   setSearchText,
   sales,
   isLoadingSales,
-  handleSearch=() => {},
+  handleSearch = () => { },
   visible,
   setVisible,
   // applyFilters,
-  clearSearch=() => {},
+  clearSearch = () => { },
   loadMoreSales,
   isLoadingMore,
   paginationMeta,
+  salesStatus,
+  setSalesStatus
 }: {
   searchText: string;
   setSearchText: (text: string) => void;
@@ -34,6 +36,8 @@ const SalesScreen = ({
   clearSearch?: () => void;
   loadMoreSales: () => void;
   paginationMeta: PaginationMeta;
+  salesStatus: 'COMPLETED' | 'REVERSED' | 'DRAFT';
+  setSalesStatus: (status: 'COMPLETED' | 'REVERSED' | 'DRAFT') => void;
 }) => {
   const [selectedItem, setSelectedItem] = useState<Sale | null>(null);
   // const { setClickedItem } = useEditItemStore();
@@ -53,6 +57,16 @@ const SalesScreen = ({
   return (
     <View style={styles.container}>
       {/* Search Bar and Action Buttons */}
+      <View style={styles.statusTabs}>
+        <TouchableOpacity onPress={() => { setSalesStatus("COMPLETED") }}
+          style={[styles.statusTabsBtn, salesStatus === "COMPLETED" && { backgroundColor: "#FFFFFF" }]}>
+          <Text style={[styles.statusTabsBtnText, salesStatus === "COMPLETED" && { color: "#FF700A" }]}>Fulfilled</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => { setSalesStatus("DRAFT") }}
+          style={[styles.statusTabsBtn, salesStatus === "DRAFT" && { backgroundColor: "#FFFFFF" }]}>
+          <Text style={[styles.statusTabsBtnText, salesStatus === "DRAFT" && { color: "#FF700A" }]}>Drafts</Text>
+        </TouchableOpacity>
+      </View>
       <View>
         <View style={styles.searchContainer}>
           <SalesSearch

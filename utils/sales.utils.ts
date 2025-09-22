@@ -1,4 +1,4 @@
-import { fetchCompletedSales, PaginationMeta, Sale } from '@/lib/requests/sales.requests';
+import { fetchCompletedSales, fetchDraftSales, PaginationMeta, Sale } from '@/lib/requests/sales.requests';
 import { StoreProfile } from '@/store/useUserStore';
 
 interface FetchSalesParams {
@@ -38,6 +38,14 @@ export const fetchSales = async ({
         let response;
         if (status === 'COMPLETED') {
             response = await fetchCompletedSales({
+                storeId: store.id,
+                page: page,
+            });
+
+        }
+
+        if (status === 'DRAFT') {
+            response = await fetchDraftSales({
                 storeId: store.id,
                 page: page,
             });

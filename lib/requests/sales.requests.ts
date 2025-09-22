@@ -62,6 +62,7 @@ interface GetCompletedSalesParams {
     page?: number;
 }
 
+// Fet ch Completed Sales (sales.utils.ts)
 export async function fetchCompletedSales({
     storeId,
     page = 1,
@@ -71,6 +72,30 @@ export async function fetchCompletedSales({
         if (page) query.append("page", page.toString());
 
         let url = `${backendUrl}/api/sale/get/${storeId}/complete`;
+        const queryString = query.toString();
+        if (queryString) {
+            url += `?${queryString}`;
+        }
+
+        const response = await axios.get(url);
+
+        return response.data.data;
+    } catch (error: any) {
+        console.error("[Fetch Completed Sales Error]", error);
+        throw new Error(error?.response?.data?.message || "Failed to fetch completed sales");
+    }
+}
+
+// Fetch Draft Sales (sales.utils.ts)
+export async function fetchDraftSales({
+    storeId,
+    page = 1,
+}: GetCompletedSalesParams) {
+    try {
+        const query = new URLSearchParams();
+        if (page) query.append("page", page.toString());
+
+        let url = `${backendUrl}/api/sale/get/${storeId}/draft`;
         const queryString = query.toString();
         if (queryString) {
             url += `?${queryString}`;

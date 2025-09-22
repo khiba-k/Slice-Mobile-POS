@@ -39,7 +39,7 @@ const index = () => {
           status: status,
         }
       );
-    }, [])
+    }, [status])
   );
 
   // Handle Search
@@ -117,7 +117,8 @@ const index = () => {
         loadMoreSales={loadMoreSales}
         isLoadingMore={isLoadingMore}
         paginationMeta={paginationMeta}
-        
+        salesStatus={status}
+        setSalesStatus={setStatus}
       />
       <FabMenu />
     </View>

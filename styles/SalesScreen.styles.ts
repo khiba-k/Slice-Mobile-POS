@@ -125,4 +125,24 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    statusTabs: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginBottom: 16,
+        backgroundColor: '#F2F2F7',
+        borderRadius: 5,
+        paddingHorizontal: 4,
+        paddingVertical: 4,
+    },
+    statusTabsBtn: {
+        alignItems: 'center',
+        borderRadius: 8,
+        paddingVertical: 5,
+        width: '50%',
+    },
+    statusTabsBtnText: {
+        fontSize: 14,
+        fontWeight: '500',
+        color: '#8E8E93'
+    }
 })
