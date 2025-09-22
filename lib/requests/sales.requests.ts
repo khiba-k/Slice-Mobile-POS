@@ -109,3 +109,17 @@ export async function fetchDraftSales({
         throw new Error(error?.response?.data?.message || "Failed to fetch completed sales");
     }
 }
+
+export async function fetchInventoryForSales({
+    storeId,
+}: { storeId: string }) {
+    try {
+
+        const response = await axios.get(`${backendUrl}/api/sale/inventory/${storeId}`);
+        return response.data.data;
+    } catch (error: any) {
+        console.error("[Fetch Completed Sales Error]", error);
+        throw new Error(error?.response?.data?.message || "Failed to fetch completed sales");
+    }
+}
+

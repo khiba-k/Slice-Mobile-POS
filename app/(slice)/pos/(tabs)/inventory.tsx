@@ -1,6 +1,7 @@
 import FabMenu from '@/components/shared/FabMenu';
 import { InventoryItem, ItemTypeDepartmentNamePair, PaginationMeta } from '@/lib/requests/inventory.requests';
 import InventoryScreen from '@/screens/InventoryScreen/InventoryScreen';
+import { useSaleInventoryStore } from '@/store/useSaleInventoryStore';
 import { useUserStore } from '@/store/useUserStore';
 import { fetchInventory } from '@/utils/inventory.utils';
 import { useFocusEffect } from '@react-navigation/native';
@@ -19,6 +20,7 @@ const Inventory = () => {
   const [visible, setVisible] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const { items } = useSaleInventoryStore();
   const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>({
     page: 1,
     take: 14,

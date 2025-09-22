@@ -20,7 +20,7 @@ const SalesSearch = ({
         <Ionicons name="search" size={20} color="#8E8E93" style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
-          placeholder="Search inventory..."
+          placeholder="Search sales..."
           value={searchText}
           onChangeText={setSearchText}
           placeholderTextColor="#8E8E93"

@@ -119,7 +119,7 @@ const AddSaleScreen = () => {
                   marginLeft: 8,
                 }}
               >
-                Add Inventory
+                New Sale
               </Text>
             </View>
           </View>

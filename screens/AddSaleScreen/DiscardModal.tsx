@@ -39,7 +39,7 @@ const DiscardModal = ({
                             Discard changes?
                         </Text>
                         <Text style={{ color: "#555", marginBottom: 20 }}>
-                            Are you sure you want to discard this unsaved inventory item?
+                            Are you sure you want to discard this unfulfilled sale?
                         </Text>
 
                         <View

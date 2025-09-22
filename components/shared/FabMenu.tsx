@@ -53,7 +53,7 @@ const FabMenu = () => {
             {/* New Sale Button */}
             <Animated.View style={[styles.secondaryButton, newSaleStyle]}>
                 <TouchableOpacity
-                    onPress={() => console.log("New Sale")}
+                    onPress={() => router.push("/(slice)/pos/newSale")}
                     style={styles.bubble}
                 >
                     <Ionicons name="cart-outline" size={24} color="#fff" />

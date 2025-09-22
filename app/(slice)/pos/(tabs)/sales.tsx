@@ -1,10 +1,12 @@
 import FabMenu from '@/components/shared/FabMenu';
 import { PaginationMeta, Sale } from '@/lib/requests/sales.requests';
 import SalesScreen from '@/screens/SalesScreen/SalesScreen';
+import { useSaleInventoryStore } from '@/store/useSaleInventoryStore';
 import { useUserStore } from '@/store/useUserStore';
+import { fetchInventory } from '@/utils/AddSalesScreen.utils';
 import { fetchSales } from '@/utils/sales.utils';
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 const index = () => {
@@ -16,6 +18,7 @@ const index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [status, setStatus] = useState<'COMPLETED' | 'REVERSED' | 'DRAFT'>('COMPLETED');
+  const { setInventory, items } = useSaleInventoryStore();
   const [paginationMeta, setPaginationMeta] = useState<PaginationMeta>({
     page: 1,
     take: 14,
@@ -42,6 +45,12 @@ const index = () => {
     }, [status])
   );
 
+  useEffect(() => {
+    fetchInventory({storeId: store!.id, setInventory: setInventory,
+      items: items,
+    });
+  }, [])
+
   // Handle Search
   // const handleSearch = () => {
   //   setCurrentPage(1);
@@ -61,7 +70,7 @@ const index = () => {
   //     })
   // }
 
-  
+
 
   // Clear Text Search
   // const clearSearch = () => {
