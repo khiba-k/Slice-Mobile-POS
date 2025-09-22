@@ -1,91 +1,77 @@
 import LoadingPage from '@/components/shared/LoadingPage';
 import { useToastStore } from '@/store/useToastStore';
 import { useUserStore } from '@/store/useUserStore';
-import { addInventory, addItemSchema } from '@/utils/AddInventoryScreen.utils';
+import { SalesItemType } from '@/utils/AddSalesScreen.utils';
 import { Ionicons } from '@expo/vector-icons';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'expo-router';
-import { Check, ChevronLeft, ChevronRight } from 'lucide-react-native';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useMemo, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import DetailsTab from './DetailsTab';
 import DiscardModal from './DiscardModal';
-import ImagesTab from './ImagesTab';
-import PricingTab from './PricingTab';
+import InventorySearch from './InventorySearch';
+import RenderSaleItems from './RenderSaleItems';
+import SummaryFooter from './SummaryFooter';
+import SummaryModal from './SummaryModal';
+
+export interface CreateSaleItemInput {
+  itemId: string;
+  quantity: number;
+}
+
+export interface CreateSaleInput {
+  storeId: string;
+  cashierId?: string;
+  name?: string;
+  saleNumber: string;
+  status: 'DRAFT' | 'COMPLETED';
+  paymentMethod: 'cash' | 'mpesa' | 'ecocash' | 'card';
+  items: CreateSaleItemInput[];
+  discountAmount?: number;
+}
 
 const AddSaleScreen = () => {
-  const router = useRouter();
-
-  const {
-    control,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(addItemSchema),
-    defaultValues: {
-      itemType: '',
-      departmentName: '',
-      name: '',
-      description: '',
-      unitSize: '',
-      unitType: '',
-      qtyAvailable: 0,
-      lowStockAlertQty: '',
-      sellingPrice: '',
-      costPrice: '',
-      markupPercentage: '',
-      displayImage: null,
-      otherImages: [],
-    },
-  });
-
-  // State for low stock toggle
-  const [lowStockEnabled, setLowStockEnabled] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] = useState<string>('');
-  const [selectedItemType, setSelectedItemType] = useState<string>('');
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
-  const [sellingPrice, setSellingPrice] = useState<string>('');
-  const [costPrice, setCostPrice] = useState<string>('');
-  const [markupPercentage, setMarkupPercentage] = useState<string>('');
-  const { store } = useUserStore();
+  const { store, profile } = useUserStore();
   const { showToast } = useToastStore();
+
   const [showDiscardModal, setShowDiscardModal] = useState(false);
+  const [saleItems, setSaleItems] = useState<SalesItemType[]>([]);
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
 
-  const [loading, setLoading] = useState(false);
+  const [discountPercent, setDiscountPercent] = useState(0);
+  const [discountValue, setDiscountValue] = useState(0);
+  const [saleName, setSaleName] = useState('');
 
-  // Wizard step state
-  const [step, setStep] = useState(0);
+  const subtotal = useMemo(
+    () => saleItems.reduce((acc, item) => acc + item.totalPrice, 0),
+    [saleItems]
+  );
 
-  const onSubmit = async (data: any) => {
-    setLoading(true);
-    await addInventory(data, store, router, showToast);
-    setLoading(false);
-  };
+  const total = subtotal - discountValue;
 
-  const onError = (errors: any) => {
-    console.log('Validation errors:', errors);
+  const handleSubmit = (paymentMethod: 'cash' | 'mpesa' | 'ecocash' | 'card') => {
+    const saleData: CreateSaleInput = {
+      storeId: store!.id,
+      cashierId: profile!.userId,
+      name: saleName || undefined,
+      saleNumber: `SALE-${Date.now()}`,
+      status: 'COMPLETED',
+      paymentMethod,
+      items: saleItems.map(item => ({
+        itemId: item.id,
+        quantity: item.quantity
+      })),
+      discountAmount: discountValue > 0 ? discountValue : undefined
+    };
 
-    showToast(false, 'Missing Required Fields');
-  };
-
-  // Navigation handlers
-  const goNext = () => {
-    if (step < 2) setStep(step + 1);
-  };
-
-  const goBack = () => {
-    if (step > 0) setStep(step - 1);
+    console.log('Submitting sale:', saleData);
+    setShowSummaryModal(false);
+    // TODO: call API to submit sale
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
-      {loading ? (
+      {false ? (
         <LoadingPage />
       ) : (
-        <>
+        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
           {/* Header */}
           <View
             style={{
@@ -93,7 +79,6 @@ const AddSaleScreen = () => {
               alignItems: 'center',
               paddingHorizontal: 16,
               paddingVertical: 12,
-              backgroundColor: '#FFFFFF',
               marginTop: 20,
             }}
           >
@@ -111,82 +96,46 @@ const AddSaleScreen = () => {
             </View>
 
             <View style={{ width: '80%', alignItems: 'center' }}>
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: '600',
-                  color: '#000',
-                  marginLeft: 8,
-                }}
-              >
+              <Text style={{ fontSize: 18, fontWeight: '600', marginLeft: 8 }}>
                 New Sale
               </Text>
             </View>
           </View>
 
-          {/* Slide container: render all slides but hide inactive */}
+          {/* Body + Footer */}
           <View style={{ flex: 1 }}>
-            <View style={{ flex: 1, display: step === 0 ? 'flex' : 'none' }}>
-              <DetailsTab
-                control={control}
-                errors={errors}
-                lowStockEnabled={lowStockEnabled}
-                setLowStockEnabled={setLowStockEnabled}
-                watch={watch}
-                setValue={setValue}
-                selectedItemType={selectedItemType}
-                setSelectedItemType={setSelectedItemType}
-                selectedDepartment={selectedDepartment}
-                setSelectedDepartment={setSelectedDepartment}
-              />
+            {/* Scrollable body */}
+            <View style={{ flex: 1 }}>
+              <InventorySearch setSaleItems={setSaleItems} />
+              <RenderSaleItems saleItems={saleItems} setSaleItems={setSaleItems} />
             </View>
 
-            <View style={{ flex: 1, display: step === 1 ? 'flex' : 'none' }}>
-              <PricingTab
-                control={control}
-                errors={errors}
-                sellingPrice={sellingPrice}
-                watch={watch}
-                costPrice={costPrice}
-                markupPercentage={markupPercentage}
-                setSellingPrice={setSellingPrice}
-                setCostPrice={setCostPrice}
-                setMarkupPercentage={setMarkupPercentage}
-              />
-            </View>
+            {/* Fixed footer */}
+            <SummaryFooter
+              saleItems={saleItems}
+              subtotal={subtotal}
+              discountPercent={discountPercent}
+              discountValue={discountValue}
+              setDiscountPercent={setDiscountPercent}
+              setDiscountValue={setDiscountValue}
+              onProceed={() => setShowSummaryModal(true)}
+            />
 
-            <View style={{ flex: 1, display: step === 2 ? 'flex' : 'none' }}>
-              <ImagesTab control={control} />
-            </View>
+            {/* Summary Modal */}
+            <SummaryModal
+              visible={showSummaryModal}
+              onClose={() => setShowSummaryModal(false)}
+              saleItems={saleItems}
+              subtotal={subtotal}
+              discountAmount={discountValue}
+              discountPercent={discountPercent}
+              total={total}
+              saleName={saleName}
+              setSaleName={setSaleName}
+              onSelectPayment={handleSubmit}
+            />
           </View>
-
-          {/* Navigation chevrons */}
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: step === 0 ? 'flex-end' : 'space-between',
-              alignItems: 'center',
-              paddingHorizontal: 20,
-              paddingVertical: 12,
-            }}
-          >
-            {step > 0 && (
-              <TouchableOpacity onPress={goBack}>
-                <ChevronLeft size={40} color="#333" />
-              </TouchableOpacity>
-            )}
-
-            {step < 2 ? (
-              <TouchableOpacity onPress={goNext}>
-                <ChevronRight size={40} color="#FF700A" />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={handleSubmit(onSubmit, onError)}>
-                <Check size={40} color="#FF700A" />
-              </TouchableOpacity>
-            )}
-          </View>
-        </>
+        </View>
       )}
     </View>
   );

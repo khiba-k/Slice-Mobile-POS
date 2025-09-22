@@ -57,16 +57,6 @@ const SalesScreen = ({
   return (
     <View style={styles.container}>
       {/* Search Bar and Action Buttons */}
-      <View style={styles.statusTabs}>
-        <TouchableOpacity onPress={() => { setSalesStatus("COMPLETED") }}
-          style={[styles.statusTabsBtn, salesStatus === "COMPLETED" && { backgroundColor: "#FFFFFF" }]}>
-          <Text style={[styles.statusTabsBtnText, salesStatus === "COMPLETED" && { color: "#FF700A" }]}>Fulfilled</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => { setSalesStatus("DRAFT") }}
-          style={[styles.statusTabsBtn, salesStatus === "DRAFT" && { backgroundColor: "#FFFFFF" }]}>
-          <Text style={[styles.statusTabsBtnText, salesStatus === "DRAFT" && { color: "#FF700A" }]}>Drafts</Text>
-        </TouchableOpacity>
-      </View>
       <View>
         <View style={styles.searchContainer}>
           <SalesSearch
@@ -100,6 +90,16 @@ const SalesScreen = ({
             applyFilters(type, dep);
           }}
         /> */}
+      </View>
+      <View style={styles.statusTabs}>
+        <TouchableOpacity onPress={() => { setSalesStatus("COMPLETED") }}
+          style={[styles.statusTabsBtn, salesStatus === "COMPLETED" && { backgroundColor: "#FFFFFF" }]}>
+          <Text style={[styles.statusTabsBtnText, salesStatus === "COMPLETED" && { color: "#FF700A" }]}>Fulfilled</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => { setSalesStatus("DRAFT") }}
+          style={[styles.statusTabsBtn, salesStatus === "DRAFT" && { backgroundColor: "#FFFFFF" }]}>
+          <Text style={[styles.statusTabsBtnText, salesStatus === "DRAFT" && { color: "#FF700A" }]}>Drafts</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Inventory List */}
