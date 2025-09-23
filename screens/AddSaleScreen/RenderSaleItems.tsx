@@ -94,7 +94,7 @@ const RenderSaleItems: React.FC<RenderSaleItemsProps> = ({
                         {unitDisplay ? `/ ${unitDisplay}` : ""}
                     </Text>
                     <Text style={{ fontSize: 12, color: "green" }}>
-                        Available: {item.qtyAvailable}
+                        Available: {item.qtyAvailable - 1}
                     </Text>
                 </View>
 

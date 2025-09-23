@@ -11,29 +11,30 @@ import {
 
 interface SummaryFooterProps {
     saleItems: SalesItemType[];
-    onProceed: (summary: {
-        subtotal: number;
-        discount: number;
-        discountPercent: number;
-        total: number;
-    }) => void;
+    onProceed: () => void;
     setDiscountPercent: React.Dispatch<React.SetStateAction<number>>;
     setDiscountValue: React.Dispatch<React.SetStateAction<number>>;
     discountPercent: number;
     discountValue: number;
     subtotal: number;
+    handleSubmit: (
+        paymentMethod?: 'CASH' | 'MPESA' | 'ECOCASH' | 'CARD',
+        forceStatus?: 'DRAFT' | 'COMPLETED'
+    ) => Promise<void>;
+    status: 'DRAFT' | 'COMPLETED';
+    setStatus: (status: 'DRAFT' | 'COMPLETED') => void;
 }
 
 const SummaryFooter: React.FC<SummaryFooterProps> = ({
-    saleItems,
-    onProceed,
     setDiscountPercent,
     setDiscountValue,
     discountPercent,
     discountValue,
     subtotal,
+    handleSubmit,
+    setStatus,
+    onProceed
 }) => {
-    // Keep discount fields in sync
     const handlePercentChange = (text: string) => {
         const percent = parseFloat(text) || 0;
         setDiscountPercent(percent);
@@ -132,14 +133,7 @@ const SummaryFooter: React.FC<SummaryFooterProps> = ({
                         alignItems: "center",
                         marginBottom: 8,
                     }}
-                    onPress={() =>
-                        onProceed({
-                            subtotal,
-                            discount: discountValue,
-                            discountPercent,
-                            total,
-                        })
-                    }
+                    onPress={() => onProceed()}
                 >
                     <Text style={{ color: "#fff", fontSize: 16, fontWeight: "600" }}>
                         Proceed with Sale
@@ -154,14 +148,10 @@ const SummaryFooter: React.FC<SummaryFooterProps> = ({
                         borderRadius: 8,
                         alignItems: "center",
                     }}
-                    onPress={() =>
-                        onProceed({
-                            subtotal,
-                            discount: discountValue,
-                            discountPercent,
-                            total,
-                        })
-                    }
+                    onPress={() => {
+                        setStatus("DRAFT");
+                        handleSubmit(undefined, "DRAFT");
+                    }}
                 >
                     <Text style={{ color: "#fff", fontSize: 16, fontWeight: "600" }}>
                         Save as Draft

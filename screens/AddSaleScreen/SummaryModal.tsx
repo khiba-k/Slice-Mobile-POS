@@ -12,7 +12,7 @@ export interface SummaryModalProps {
     total: number;
     saleName: string;
     setSaleName: React.Dispatch<React.SetStateAction<string>>;
-    onSelectPayment: (method: 'cash' | 'mpesa' | 'ecocash' | 'card') => void;
+    onSelectPayment: (method: 'CASH' | 'MPESA' | 'ECOCASH' | 'CARD') => void;
 }
 
 const SummaryModal: React.FC<SummaryModalProps> = ({
@@ -91,7 +91,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({
 
                     {/* Payment buttons horizontally stacked */}
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                        {['cash', 'mpesa', 'ecocash', 'card'].map((method, i) => (
+                        {['CASH', 'MPESA', 'ECOCASH', 'CARD'].map((method, i) => (
                             <TouchableOpacity
                                 key={method}
                                 style={{

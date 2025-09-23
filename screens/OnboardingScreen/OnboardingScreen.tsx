@@ -22,7 +22,8 @@ const OnboardingScreen = () => {
                 if (user) {
                     const userProfile = await getUser(user.uid);
                     if (userProfile) {
-                        useUserStore.getState().setUserAndStore(userProfile.data.user, userProfile.data.store);
+                        const { store, ...userData } = userProfile.data;
+                        useUserStore.getState().setUserAndStore(userData, store);
                         setIsLoading(false);
                         router.push('/(slice)/pos/(tabs)/sales');
                     }

@@ -1,3 +1,4 @@
+import { CreateSaleInput } from "@/screens/AddSaleScreen/AddSaleScreen";
 import axios from "axios";
 
 const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
@@ -110,6 +111,7 @@ export async function fetchDraftSales({
     }
 }
 
+// Fetch Inventory for Sales (AddSalesScreen.utils.ts)
 export async function fetchInventoryForSales({
     storeId,
 }: { storeId: string }) {
@@ -123,3 +125,15 @@ export async function fetchInventoryForSales({
     }
 }
 
+// Submit Sale(AddSaleScreen.tsx)
+export async function submitSale(data: CreateSaleInput) {
+    try {
+        const { storeId, ...saleData } = data;
+
+        const response = await axios.post(`${backendUrl}/api/sale/add/${storeId}`, saleData);
+        return response.data.data;
+    } catch (error: any) {
+        console.error("[Fetch Completed Sales Error]", error);
+        throw new Error(error?.response?.data?.message || "Failed to log new sale");
+    }
+}

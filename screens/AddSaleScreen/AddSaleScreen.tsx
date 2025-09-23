@@ -1,8 +1,10 @@
 import LoadingPage from '@/components/shared/LoadingPage';
+import { submitSale } from '@/lib/requests/sales.requests';
 import { useToastStore } from '@/store/useToastStore';
 import { useUserStore } from '@/store/useUserStore';
 import { SalesItemType } from '@/utils/AddSalesScreen.utils';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import DiscardModal from './DiscardModal';
@@ -22,7 +24,7 @@ export interface CreateSaleInput {
   name?: string;
   saleNumber: string;
   status: 'DRAFT' | 'COMPLETED';
-  paymentMethod: 'cash' | 'mpesa' | 'ecocash' | 'card';
+  paymentMethod?: 'CASH' | 'MPESA' | 'ECOCASH' | 'CARD';
   items: CreateSaleItemInput[];
   discountAmount?: number;
 }
@@ -30,14 +32,15 @@ export interface CreateSaleInput {
 const AddSaleScreen = () => {
   const { store, profile } = useUserStore();
   const { showToast } = useToastStore();
-
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [saleItems, setSaleItems] = useState<SalesItemType[]>([]);
   const [showSummaryModal, setShowSummaryModal] = useState(false);
-
   const [discountPercent, setDiscountPercent] = useState(0);
   const [discountValue, setDiscountValue] = useState(0);
   const [saleName, setSaleName] = useState('');
+  const [status, setStatus] = useState<'DRAFT' | 'COMPLETED'>('COMPLETED');
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const subtotal = useMemo(
     () => saleItems.reduce((acc, item) => acc + item.totalPrice, 0),
@@ -46,29 +49,46 @@ const AddSaleScreen = () => {
 
   const total = subtotal - discountValue;
 
-  const handleSubmit = (paymentMethod: 'cash' | 'mpesa' | 'ecocash' | 'card') => {
-    const saleData: CreateSaleInput = {
-      storeId: store!.id,
-      cashierId: profile!.userId,
-      name: saleName || undefined,
-      saleNumber: `SALE-${Date.now()}`,
-      status: 'COMPLETED',
-      paymentMethod,
-      items: saleItems.map(item => ({
-        itemId: item.id,
-        quantity: item.quantity
-      })),
-      discountAmount: discountValue > 0 ? discountValue : undefined
-    };
+  /**
+   * Handles submission for both draft & completed sales
+   */
+  const handleSubmit = async (
+    paymentMethod?: 'CASH' | 'MPESA' | 'ECOCASH' | 'CARD',
+    forceStatus?: 'DRAFT' | 'COMPLETED'
+  ) => {
+    try {
+      setLoading(true);
 
-    console.log('Submitting sale:', saleData);
-    setShowSummaryModal(false);
-    // TODO: call API to submit sale
+      const isDraft = forceStatus === 'DRAFT';
+      const saleData: CreateSaleInput = {
+        storeId: store!.id,
+        cashierId: profile!.id,
+        name: saleName || undefined,
+        saleNumber: `SALE-${Date.now()}`,
+        status: isDraft ? 'DRAFT' : 'COMPLETED',
+        paymentMethod: isDraft ? undefined : paymentMethod,
+        items: saleItems.map(item => ({
+          itemId: item.id,
+          quantity: item.quantity,
+        })),
+        discountAmount: discountValue > 0 ? discountValue : undefined,
+      };
+
+      await submitSale(saleData);
+
+      router.back();
+      showToast(true, isDraft ? 'Sale saved as draft' : 'Sale completed successfully');
+    } catch (error: any) {
+      showToast(false, error.message);
+    } finally {
+      setLoading(false);
+      setShowSummaryModal(false);
+    }
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
-      {false ? (
+      {loading ? (
         <LoadingPage />
       ) : (
         <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
@@ -119,6 +139,9 @@ const AddSaleScreen = () => {
               setDiscountPercent={setDiscountPercent}
               setDiscountValue={setDiscountValue}
               onProceed={() => setShowSummaryModal(true)}
+              handleSubmit={handleSubmit}
+              status={status}
+              setStatus={setStatus}
             />
 
             {/* Summary Modal */}
@@ -132,7 +155,7 @@ const AddSaleScreen = () => {
               total={total}
               saleName={saleName}
               setSaleName={setSaleName}
-              onSelectPayment={handleSubmit}
+              onSelectPayment={(method) => handleSubmit(method, 'COMPLETED')}
             />
           </View>
         </View>
