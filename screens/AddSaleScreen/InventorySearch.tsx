@@ -1,6 +1,6 @@
 import { InventoryItem, useSaleInventoryStore } from "@/store/useSaleInventoryStore";
 import { useUserStore } from "@/store/useUserStore";
-import styles from "@/styles/AddSalesScreen.styles";
+import { styles } from "@/styles/InsightsScreen.styles";
 import { fetchInventory, SalesItemType } from "@/utils/AddSalesScreen.utils";
 import { Ionicons } from "@expo/vector-icons";
 import Fuse from "fuse.js";

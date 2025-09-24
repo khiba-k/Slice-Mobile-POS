@@ -1,5 +1,7 @@
+import styles from "@/styles/AddSalesScreen.styles";
 import { SalesItemType } from "@/utils/AddSalesScreen.utils";
-import React from "react";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
 import {
     KeyboardAvoidingView,
     Platform,
@@ -35,6 +37,8 @@ const SummaryFooter: React.FC<SummaryFooterProps> = ({
     setStatus,
     onProceed
 }) => {
+    const [collapsed, setCollapsed] = useState(true);
+
     const handlePercentChange = (text: string) => {
         const percent = parseFloat(text) || 0;
         setDiscountPercent(percent);
@@ -54,109 +58,74 @@ const SummaryFooter: React.FC<SummaryFooterProps> = ({
             behavior={Platform.OS === "ios" ? "padding" : undefined}
             keyboardVerticalOffset={80}
         >
-            <View
-                style={{
-                    backgroundColor: "#fff",
-                    borderTopWidth: 1,
-                    borderColor: "#eee",
-                    padding: 16,
-                }}
-            >
-                {/* Subtotal */}
-                <View
-                    style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        marginBottom: 8,
-                    }}
-                >
-                    <Text style={{ fontSize: 16, fontWeight: "600" }}>Subtotal</Text>
-                    <Text style={{ fontSize: 16, fontWeight: "600" }}>
-                        M {subtotal.toFixed(2)}
-                    </Text>
-                </View>
-
-                {/* Discount Inputs */}
-                <View style={{ flexDirection: "row", marginBottom: 8 }}>
-                    <View style={{ flex: 1, marginRight: 8 }}>
-                        <Text style={{ fontSize: 14, color: "#666" }}>Discount %</Text>
-                        <TextInput
-                            style={{
-                                borderWidth: 1,
-                                borderColor: "#ccc",
-                                borderRadius: 6,
-                                padding: 8,
-                                marginTop: 4,
-                            }}
-                            keyboardType="numeric"
-                            value={discountPercent.toFixed(2)}
-                            onChangeText={handlePercentChange}
-                        />
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <Text style={{ fontSize: 14, color: "#666" }}>Discount (M)</Text>
-                        <TextInput
-                            style={{
-                                borderWidth: 1,
-                                borderColor: "#ccc",
-                                borderRadius: 6,
-                                padding: 8,
-                                marginTop: 4,
-                            }}
-                            keyboardType="numeric"
-                            value={discountValue.toFixed(2)}
-                            onChangeText={handleValueChange}
-                        />
-                    </View>
-                </View>
-
-                {/* Total */}
-                <View
-                    style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        marginBottom: 12,
-                    }}
-                >
-                    <Text style={{ fontSize: 18, fontWeight: "700" }}>Total</Text>
-                    <Text style={{ fontSize: 18, fontWeight: "700" }}>
-                        M {total.toFixed(2)}
-                    </Text>
-                </View>
-
-                {/* Proceed Button */}
+            <View style={styles.summaryFooterContainer}>
+                {/* Toggle Chevron */}
                 <TouchableOpacity
-                    style={{
-                        backgroundColor: "#007bff",
-                        padding: 14,
-                        borderRadius: 8,
-                        alignItems: "center",
-                        marginBottom: 8,
-                    }}
-                    onPress={() => onProceed()}
+                    style={styles.chevronToggle}
+                    onPress={() => setCollapsed(!collapsed)}
                 >
-                    <Text style={{ color: "#fff", fontSize: 16, fontWeight: "600" }}>
-                        Proceed with Sale
-                    </Text>
+                    <Ionicons
+                        name={collapsed ? "chevron-up" : "chevron-down"}
+                        size={32}
+                        color={collapsed ? "#FF700A" : "black"}
+                    />
                 </TouchableOpacity>
 
-                {/* Draft Button */}
-                <TouchableOpacity
-                    style={{
-                        backgroundColor: "#6c757d",
-                        padding: 14,
-                        borderRadius: 8,
-                        alignItems: "center",
-                    }}
-                    onPress={() => {
-                        setStatus("DRAFT");
-                        handleSubmit(undefined, "DRAFT");
-                    }}
-                >
-                    <Text style={{ color: "#fff", fontSize: 16, fontWeight: "600" }}>
-                        Save as Draft
-                    </Text>
-                </TouchableOpacity>
+                {!collapsed && (
+                    <View style={styles.summaryContent}>
+                        {/* Subtotal */}
+                        <View style={styles.rowSpaceBetween}>
+                            <Text style={styles.subtotalText}>Subtotal</Text>
+                            <Text style={styles.subtotalText}>M {subtotal.toFixed(2)}</Text>
+                        </View>
+
+                        {/* Discount Inputs */}
+                        <View style={styles.discountRow}>
+                            <View style={styles.discountInputContainer}>
+                                <Text style={styles.discountLabel}>Discount %</Text>
+                                <TextInput
+                                    style={styles.discountInput}
+                                    keyboardType="numeric"
+                                    value={discountPercent.toFixed(2)}
+                                    onChangeText={handlePercentChange}
+                                />
+                            </View>
+                            <View style={styles.discountInputContainer}>
+                                <Text style={styles.discountLabel}>Discount (M)</Text>
+                                <TextInput
+                                    style={styles.discountInput}
+                                    keyboardType="numeric"
+                                    value={discountValue.toFixed(2)}
+                                    onChangeText={handleValueChange}
+                                />
+                            </View>
+                        </View>
+
+                        {/* Total */}
+                        <View style={[styles.rowSpaceBetween, { marginBottom: 12 }]}>
+                            <Text style={styles.totalText}>Total</Text>
+                            <Text style={styles.totalText}>M {total.toFixed(2)}</Text>
+                        </View>
+
+                        {/* Buttons */}
+                        <TouchableOpacity
+                            style={styles.proceedButton}
+                            onPress={onProceed}
+                        >
+                            <Text style={styles.proceedButtonText}>Proceed with Sale</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={styles.draftButton}
+                            onPress={() => {
+                                setStatus("DRAFT");
+                                handleSubmit(undefined, "DRAFT");
+                            }}
+                        >
+                            <Text style={styles.draftButtonText}>Save as Draft</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
             </View>
         </KeyboardAvoidingView>
     );

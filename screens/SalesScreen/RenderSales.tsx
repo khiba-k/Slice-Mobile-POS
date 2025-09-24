@@ -20,15 +20,7 @@ const RenderSales = ({ sale, onLongPress, onPress }:
                 activeOpacity={0.4}
             >
                 {/* Image */}
-                {/* {displayImage ? (
-                    <Image
-                        source={{ uri: displayImage.url }}
-                        style={styles.itemImage}
-                        onError={() => console.log('Display image failed to load')}
-                    />
-                ) : (
-                    <View style={styles.imagePlaceholder} />
-                )} */}
+                
                 {/* Info */}
                 <View style={{ flex: 1, flexDirection: "column", marginLeft: 10, marginRight: 20 }}>
                     <Text style={styles.itemName}>{sale.name ?? " - "}</Text>

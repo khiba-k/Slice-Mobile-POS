@@ -96,6 +96,237 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    // --- Sale Item Styles ---
+    saleItemContainer: {
+        borderBottomWidth: 1,
+        borderColor: "#eee",
+        paddingVertical: 10,
+        marginBottom: 10,
+    },
+    saleItemTopRow: {
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        marginBottom: 4,
+    },
+    saleItemMiddleRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 6,
+    },
+    itemNamePrice: {
+        marginLeft: 12,
+        flex: 1,
+    },
+    itemName: {
+        fontSize: 16,
+        fontWeight: "600",
+    },
+    itemSellingPrice: {
+        fontSize: 14,
+        color: "#555",
+    },
+    saleItemBottomRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    itemAvailable: {
+        fontSize: 12,
+        color: "green",
+    },
+    itemTotalPrice: {
+        fontSize: 14,
+        fontWeight: "600",
+    },
+    quantityContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    qtyBtn: {
+        padding: 4,
+    },
+    qtyInput: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 6,
+        width: 50,
+        height: 40,
+        textAlign: "center",
+        fontSize: 16,
+        paddingVertical: 4,
+        marginHorizontal: 6,
+        color: "#000",
+        backgroundColor: "#fff",
+    },
+
+    itemImage: {
+        width: 50,
+        height: 50,
+        borderRadius: 8,
+        backgroundColor: '#F2F2F7',
+    },
+    imagePlaceholder: {
+        width: 50,
+        height: 50,
+        backgroundColor: '#F2F2F7',
+        borderRadius: 8,
+    },
+    summaryFooterContainer: {
+        backgroundColor: "#fff",
+        borderTopWidth: 1,
+        borderColor: "#eee",
+        padding: 8,
+    },
+
+    chevronToggle: {
+        alignSelf: "center",
+        padding: 4,
+    },
+
+    summaryContent: {
+        paddingTop: 8,
+    },
+
+    rowSpaceBetween: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 8,
+    },
+
+    subtotalText: {
+        fontSize: 16,
+        fontWeight: "600",
+    },
+
+    discountRow: {
+        flexDirection: "row",
+        marginBottom: 8,
+    },
+
+    discountInputContainer: {
+        flex: 1,
+        marginRight: 8,
+    },
+
+    discountLabel: {
+        fontSize: 14,
+        color: "#666",
+    },
+
+    discountInput: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 6,
+        padding: 8,
+        marginTop: 4,
+    },
+
+    totalText: {
+        fontSize: 18,
+        fontWeight: "700",
+    },
+
+    proceedButton: {
+        backgroundColor: "#FF700A",
+        padding: 14,
+        borderRadius: 8,
+        alignItems: "center",
+        marginBottom: 8,
+    },
+
+    proceedButtonText: {
+        color: "#fff",
+        fontSize: 16,
+        fontWeight: "600",
+    },
+
+    draftButton: {
+        backgroundColor: "#6c757d",
+        padding: 14,
+        borderRadius: 8,
+        alignItems: "center",
+    },
+
+    draftButtonText: {
+        color: "#fff",
+        fontSize: 16,
+        fontWeight: "600",
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        justifyContent: "flex-end",
+    },
+    modalContainer: {
+        backgroundColor: "#fff",
+        padding: 20,
+        borderTopLeftRadius: 12,
+        borderTopRightRadius: 12,
+        maxHeight: "90%",
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: "700",
+        marginBottom: 12,
+        color: "#FF700A",
+    },
+    saleNameInput: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 6,
+        padding: 8,
+        marginBottom: 12,
+    },
+    receiptRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 4,
+    },
+    receiptLabel: {
+        fontSize: 14,
+        color: "#333",
+    },
+    receiptValue: {
+        fontSize: 14,
+        color: "#333",
+    },
+    itemsContainer: {
+        marginTop: 12,
+        borderTopWidth: 1,
+        borderColor: "#eee",
+        paddingTop: 8,
+    },
+    itemRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 4,
+    },
+    paymentTitle: {
+        fontSize: 16,
+        fontWeight: "600",
+        marginTop: 16,
+        marginBottom: 8,
+    },
+    paymentButton: {
+        padding: 14,
+        borderRadius: 8,
+        alignItems: "center",
+        marginBottom: 8,
+    },
+    paymentButtonText: {
+        color: "#fff",
+        fontSize: 16,
+        fontWeight: "600",
+    },
+    closeButton: {
+        marginTop: 12,
+        alignItems: "center",
+    },
+    closeButtonText: {
+        color: "#8E8E93",
+        fontSize: 16,
+        fontWeight: "600",
+    },
 })
 
 export default styles;

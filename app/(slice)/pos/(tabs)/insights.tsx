@@ -1,31 +1,21 @@
-import { logOut } from '@/lib/services/authService'
+import FabMenu from '@/components/shared/FabMenu';
+import InsightsScreen from '@/screens/InsightsScreen/InsightsScreen';
 import { useUserStore } from '@/store/useUserStore';
-import React from 'react'
-import { Button, StyleSheet, Text, View } from 'react-native'
-import { useToastStore } from "@/store/useToastStore";
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 
 const index = () => {
   const { profile, store, clearUser } = useUserStore();
-  const { showToast } = useToastStore();
-  const handleLogout = async () => {
-    try {
-      await logOut()
-      showToast(true, "Logged Out");
-      clearUser();
-    } catch (error: any) {
-      console.log("Logout Error: ", error);
-      showToast(false, 'Logout Failed');
-    }
-  }
+  const [type, setType] = useState<'Inventory' | 'Sales'>('Inventory');
 
   return (
-    <View>
-      <Text>Welcome {profile?.firstName}!</Text>
-      <Text>Email: {profile?.email}</Text>
-      <Text>Store: {store?.name}</Text>
-      <Text style={styles.text}>Home Screen</Text>
-      <Button title="Logout" onPress={handleLogout} />
+    <View style={styles.container}>
+      <InsightsScreen 
+      type={type}
+      setType={setType}
+      />
+      <FabMenu />
     </View>
   )
 }
@@ -35,11 +25,6 @@ export default index
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
   },
-  text: {
-    fontSize: 20,
-    marginBottom: 20
-  }
+
 })

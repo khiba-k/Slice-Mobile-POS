@@ -1,6 +1,7 @@
+import styles from "@/styles/AddSalesScreen.styles";
 import { SalesItemType } from "@/utils/AddSalesScreen.utils";
 import React from "react";
-import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export interface SummaryModalProps {
     visible: boolean;
@@ -29,94 +30,71 @@ const SummaryModal: React.FC<SummaryModalProps> = ({
 }) => {
     if (!visible) return null;
 
+    const paymentMethods: { method: 'CASH' | 'MPESA' | 'ECOCASH' | 'CARD'; color: string }[] = [
+        { method: 'CASH', color: '#008000' },
+        { method: 'MPESA', color: '#E60000' },
+        { method: 'ECOCASH', color: '#0042AD' },
+        { method: 'CARD', color: '#007C7F' },
+    ];
+
     return (
         <Modal visible={visible} animationType="slide" transparent>
-            <View
-                style={{
-                    flex: 1,
-                    backgroundColor: "rgba(0,0,0,0.5)",
-                    justifyContent: "flex-end",
-                }}
-            >
-                <View
-                    style={{
-                        backgroundColor: "#fff",
-                        padding: 20,
-                        borderTopLeftRadius: 12,
-                        borderTopRightRadius: 12,
-                    }}
-                >
-                    <Text style={{ fontSize: 18, fontWeight: "700", marginBottom: 12 }}>
-                        Sale Summary
-                    </Text>
+            <View style={styles.modalOverlay}>
+                <View style={styles.modalContainer}>
+                    <ScrollView>
+                        <Text style={styles.modalTitle}>Sale Summary</Text>
 
-                    {/* Sale Name */}
-                    <TextInput
-                        placeholder="Sale Name (optional)"
-                        value={saleName}
-                        onChangeText={setSaleName}
-                        style={{
-                            borderWidth: 1,
-                            borderColor: "#ccc",
-                            borderRadius: 6,
-                            padding: 8,
-                            marginBottom: 12,
-                        }}
-                    />
+                        {/* Sale Name */}
+                        <TextInput
+                            placeholder="Sale Name (optional)"
+                            value={saleName}
+                            onChangeText={setSaleName}
+                            style={styles.saleNameInput}
+                        />
 
-                    {/* Subtotal */}
-                    <Text>Subtotal: M {subtotal.toFixed(2)}</Text>
-
-                    {/* Discount */}
-                    <Text>Discount: M {discountAmount.toFixed(2)} ({discountPercent.toFixed(2)}%)</Text>
-
-                    {/* Total */}
-                    <Text style={{ fontSize: 16, fontWeight: "700", marginTop: 8 }}>
-                        Total: M {total.toFixed(2)}
-                    </Text>
-
-                    {/* Sale Items */}
-                    <View style={{ marginTop: 12 }}>
-                        {saleItems.map((item) => (
-                            <Text key={item.id}>
-                                {item.name} x {item.quantity} = M {item.totalPrice.toFixed(2)}
+                        {/* Receipt Details */}
+                        <View style={styles.receiptRow}>
+                            <Text style={styles.receiptLabel}>Subtotal:</Text>
+                            <Text style={styles.receiptValue}>M {subtotal.toFixed(2)}</Text>
+                        </View>
+                        <View style={styles.receiptRow}>
+                            <Text style={styles.receiptLabel}>Discount:</Text>
+                            <Text style={styles.receiptValue}>
+                                M {discountAmount.toFixed(2)} ({discountPercent.toFixed(2)}%)
                             </Text>
-                        ))}
-                    </View>
+                        </View>
+                        <View style={[styles.receiptRow, { marginTop: 8 }]}>
+                            <Text style={[styles.receiptLabel, { fontWeight: '700' }]}>Total:</Text>
+                            <Text style={[styles.receiptValue, { fontWeight: '700' }]}>M {total.toFixed(2)}</Text>
+                        </View>
 
-                    {/* Payment Method Heading */}
-                    <Text style={{ fontSize: 16, fontWeight: "600", marginTop: 16, marginBottom: 8 }}>
-                        Payment Method
-                    </Text>
+                        {/* Sale Items */}
+                        <View style={styles.itemsContainer}>
+                            {saleItems.map((item) => (
+                                <View key={item.id} style={styles.itemRow}>
+                                    <Text>{item.name} x {item.quantity}</Text>
+                                    <Text>M {item.totalPrice.toFixed(2)}</Text>
+                                </View>
+                            ))}
+                        </View>
 
-                    {/* Payment buttons horizontally stacked */}
-                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                        {['CASH', 'MPESA', 'ECOCASH', 'CARD'].map((method, i) => (
+                        {/* Payment Methods */}
+                        <Text style={styles.paymentTitle}>Payment Method</Text>
+                        {paymentMethods.map(({ method, color }) => (
                             <TouchableOpacity
                                 key={method}
-                                style={{
-                                    flex: 1,
-                                    padding: 12,
-                                    backgroundColor: ["#007bff", "#ffc107", "#28a745", "#6c757d"][i],
-                                    borderRadius: 8,
-                                    marginRight: i < 3 ? 8 : 0,
-                                }}
-                                onPress={() => onSelectPayment(method as any)}
+                                style={[styles.paymentButton, { backgroundColor: color }]}
+                                onPress={() => onSelectPayment(method)}
                             >
-                                <Text style={{ color: "#fff", textAlign: "center" }}>
-                                    {method.toUpperCase()}
-                                </Text>
+                                <Text style={styles.paymentButtonText}>{method}</Text>
                             </TouchableOpacity>
                         ))}
-                    </View>
 
-                    {/* Close button */}
-                    <TouchableOpacity
-                        style={{ marginTop: 12, alignItems: "center" }}
-                        onPress={onClose}
-                    >
-                        <Text style={{ color: "red" }}>Cancel</Text>
-                    </TouchableOpacity>
+                        {/* Close button */}
+                        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+                            <Text style={styles.closeButtonText}>Cancel</Text>
+                        </TouchableOpacity>
+                    </ScrollView>
                 </View>
             </View>
         </Modal>

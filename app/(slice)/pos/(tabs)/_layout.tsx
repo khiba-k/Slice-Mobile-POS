@@ -1,5 +1,6 @@
-import { Tabs } from "expo-router";
+import Menu from "@/components/shared/Menu";
 import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from "expo-router";
 
 
 export default function PosLayout() {
@@ -21,12 +22,7 @@ export default function PosLayout() {
                     fontSize: 20,
                 },
                 headerRight: () => (
-                    <Ionicons
-                        name="ellipsis-vertical"
-                        size={24}
-                        color="#8E8E93"
-                        style={{ marginRight: 15 }}
-                    />
+                    <Menu />
                 ),
             }}
         >
