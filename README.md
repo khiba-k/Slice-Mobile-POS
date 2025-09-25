@@ -25,4 +25,7 @@ It is a **React Native (Expo) application** that allows businesses to manage inv
 
 ---
 
+## Link to APK: 
+https://drive.google.com/file/d/1E0b2FnCOblzMQdRpJhIXTutJP5v7hWhi/view?usp=drive_link 
+
 
